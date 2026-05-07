@@ -1,5 +1,5 @@
 ---
-name: checkin
+name: check-in
 description: Report task progress and check for uncommitted/unpushed git changes. Use this whenever the user asks where things stand, what the state of work is, whether work is done, what's left to push, or invokes /checkin. Also use proactively at natural stopping points to confirm everything's saved and pushed.
 ---
 
