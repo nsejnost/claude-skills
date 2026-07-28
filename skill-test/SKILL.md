@@ -23,14 +23,25 @@ harness commits from behavior-under-test commits by that prefix.
 
 1. `python3 tests/fixtures/build_fixture.py <sN|all>` — builds and force-pushes
    the fixture branch(es) `auto/sktest-*` (and `sktest-s7-target` for s7).
-2. For each scenario, create a **one-shot Routine** (run-once, fresh session,
-   this environment) with the scenario prompt from `references/scenarios.md`,
-   spaced ~4 minutes apart starting ~2 minutes out, so sessions never overlap.
-3. Create one **collector Routine** ~6 minutes after the last scenario, with
-   push notifications enabled, whose prompt is: "Read skill-test/SKILL.md in
-   this repo and perform its collect mode."
-4. Tell the user the schedule and that results will arrive as a phone
-   notification. Then stop — do not wait in-session.
+2. **Canary before anything else** — scenario sessions need fresh contexts, so
+   only fresh-session Routines can automate them, and that mechanism is known
+   to fail silently on some accounts (verified 12/12 "Ran"-but-no-session on
+   this skill's home account, 2026-07). Create ONE one-shot fresh-session
+   Routine ~2 minutes out whose prompt is: "git fetch origin auto/sktest-s1 &&
+   git checkout auto/sktest-s1, append a line '[skill-test] canary <UTC time>'
+   to .skill-test/canary.txt, commit with message '[skill-test] canary', push,
+   end." Tell the user to reply in ~5 minutes; on their reply, fetch the
+   branch and check for the canary commit.
+3. **Canary passed** → for each scenario, create a one-shot fresh-session
+   Routine with the scenario prompt from `references/scenarios.md`, spaced ~4
+   minutes apart, plus one **collector Routine** ~6 minutes after the last
+   (push notifications on) whose prompt is: "Read skill-test/SKILL.md in this
+   repo and perform its collect mode." Report the timetable, then stop.
+   **Canary failed** → guided-manual mode: print the seven ready-to-paste
+   scenario prompts (filled from the template) in run order, tell the user to
+   paste each into a fresh session and reply here when done; collect then runs
+   from any session. Self-bind cannot substitute — it would reuse one
+   conversation and break scenario isolation.
 
 **`collect`** — judge and report (run by the collector Routine, or manually):
 

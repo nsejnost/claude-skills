@@ -31,7 +31,7 @@ runner is a self-scheduling chain of web sessions.
 | --- | --- | --- |
 | `charter` | human required | Interview → CHARTER.md; on confirmed read-back sets `status: READY` (its one state edit). Sub-modes New / Renewal / Repair. Refuses to run headless. |
 | `preflight` | human present | Prove the run cannot hang: validate charter, environment, GitHub access, baselines — in the same kind of session runs will use. |
-| `launch` | human present | Create the dashboard issue and the scheduling Routines (with phone push notifications), set `status: RUNNING`, start the chain. Also re-arms after a HALT repair or a spec-review pause. |
+| `launch` | human present | Create the dashboard issue, run the scheduling **canary**, arm the verified runner lane (self-bind chain by default; alerts via GitHub mentions or Routine push per lane), set `status: RUNNING`. Also re-arms after a HALT repair or a spec-review pause. |
 | `run` | headless | One unit of autonomous work (one phase step or one build wave), then schedule the next session and exit. |
 | `status` | either | Read-only report: phase, wave, tickets, budgets, last events. |
 | `stop` | human present | Graceful kill switch: set `status: HALTED-BY-USER`, disable the Routines, update the dashboard. |
@@ -99,9 +99,10 @@ the repo files disagree, the files win.
 5. Do **one unit of work**: one phase step, one gate audit, or one build wave.
 6. Write back: state.md, session-log.md, dashboard issue; clear the claim; commit
    and push the coordination branch (on rejection: fetch, rebase, re-push).
-7. If `status: RUNNING`, schedule exactly one next session (one-shot Routine,
-   a few minutes out) per `references/operations.md`, then **stop**. Ending the
-   session is correct behavior.
+7. If `status: RUNNING`, schedule exactly one next wake — a self-bind
+   `send_later` by default, or a fresh-session one-shot only where the launch
+   canary proved that lane works (see `references/operations.md`) — then
+   **stop**. Ending the turn is correct behavior; the wake continues the run.
 
 ## Phase machine
 

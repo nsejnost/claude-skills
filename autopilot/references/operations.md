@@ -32,39 +32,65 @@ Ticket branches `auto/<arc>/tNN` are cut from `origin/main` at dispatch, live
 only until their squash-merge, and are deleted after. `--force-with-lease` is
 permitted on these branches only.
 
-## Session scheduling (the runner)
+## Session scheduling (the runner) — two lanes, canary decides
 
-Two Routines per arc, both created at launch, ids stored in state.md:
+There are two ways to keep the run alive; **launch verifies which one this
+account can actually use** (see the canary below) and records the lane in
+state.md `notes`.
 
-- **The chain**: each run session, as its final act *after* a successful state
-  push and only when `status: RUNNING`, creates a **one-shot** Routine
-  (run-once, fresh-session-per-fire, this environment) 2–5 minutes out, with
-  prompt `/autopilot run`. One next session, never more. A crashed session
-  simply breaks the chain — by design.
-- **The babysitter**: an **hourly cron** Routine, same prompt, same environment,
-  created once at launch. It catches broken chains: a babysitter-fired session
-  runs the identical protocol (claim, budgets, one unit, reschedule the chain).
-  Terminal status → it reports and exits; the terminal session should already
-  have disabled both Routines, and any session seeing terminal status verifies
-  that and disables them if not.
+**Lane A — self-bind chain (default; platform-verified on this account).**
+The launch session itself becomes the **runner conversation**. Each wake: run
+one unit per the session protocol, push state, then — only when the pushed
+state says `RUNNING` — call `send_later` (2–5 minutes out, message
+`/autopilot run`) and END THE TURN so the fire can wake the conversation.
+Store each pending trigger id in state.md. The babysitter is an **hourly cron
+Routine bound to the same conversation** (create_trigger default self-bind
+mode), created once at launch — if a wake dies mid-wave, the next cron fire
+re-wakes the conversation; the claim protocol makes overlapping wakes exit
+quietly. Context accrues across wakes; that is acceptable because the disk is
+the program — every wake re-reads charter/state/tickets from origin and never
+relies on conversation memory (platform auto-compaction handles the rest).
+**Runner takeover** (corrupted or lost runner conversation): from any new
+session, delete the old chain + cron triggers listed in state.md, adopt the
+stale claim per protocol, re-arm a new self-bind chain from the new
+conversation, and note the rotation in session-log.
 
-**Notifications**: create the chain and babysitter with push notifications
-enabled so completed sessions that end with something noteworthy (HALT, DONE,
-PAUSED, a blocked ticket) reach the human's phone. Write session summaries so
-the noteworthy cases are unmistakable one-liners.
+**Lane B — fresh-session chain (preferred isolation; use only after the
+canary passes).** As lane A, but each link is a one-shot Routine with
+`create_new_session_on_fire: true` and an explicit, verified
+`environment_id`, and the babysitter cron also fires fresh sessions.
+KNOWN PLATFORM ISSUE: on some accounts these Routines fire server-side
+("Ran") yet no session ever materializes — verified failing 12/12 on this
+skill's home account in 2026-07. Never assume lane B works: prove it.
 
-**Guards** (all live in the run session, not the Routine):
-- Schedule only when the just-pushed state says `RUNNING`.
+**The canary (run at launch, and at preflight):** create one one-shot
+fresh-session Routine (~2 minutes out) whose prompt pushes a trivial marker
+commit to a scratch ref (e.g. append a line to `docs/auto/session-log.md` on
+the coordination branch — observable without any UI). If the marker appears
+within ~6 minutes, lane B is usable; otherwise use lane A. Delete the canary
+Routine either way.
+
+**Notifications.** Completion push notifications only exist for
+fresh-session Routines — the server rejects the parameter for self-bind. On
+lane A, phone alerts ride GitHub instead: at HALT / DONE / PAUSED, update the
+dashboard issue title AND post one comment @-mentioning the repo owner —
+GitHub's mobile app notifies on mentions. (Launch reminds the human to have
+GitHub notifications on.) On lane B, also enable Routine push notifications.
+
+**Guards** (all live in the run session/wake, not the Routine):
+- Schedule only when the just-pushed state says `RUNNING`; one next wake,
+  never more.
 - `sessions_used` at cap, `max_hours` exceeded, or `no_progress_sessions`
-  consecutive sessions without a state change (compare `last_session`) → HALT
+  consecutive wakes without a state change (compare `last_session`) → HALT
   instead of scheduling.
-- If the scheduling tools are unavailable in a session (MCP hiccup), skip the
-  chain link and rely on the babysitter — note it in session-log. If they're
-  unavailable at a terminal state, the halt/completion report must tell the
-  human to disable the Routines from their Claude interface.
+- Scheduling tools unavailable (MCP hiccup): skip the link, rely on the
+  babysitter, note it in session-log. Unavailable at a terminal state: the
+  halt/completion report tells the human to delete the Routines from the
+  claude.ai Routines panel.
 
-**Stopping the chain** is therefore: set a terminal status, push, disable both
-Routines. All three, in that order.
+**Stopping the chain** is therefore: set a terminal status, push, delete the
+pending chain trigger(s) and the babysitter cron (ids in state.md). All in
+that order.
 
 ## GitHub operations (MCP first)
 
@@ -105,8 +131,8 @@ blocks launch with a specific fix.
 4. CI: workflows detected (or the charter's no-CI stance confirmed); baseline
    suite runs green **in this container** — catching env vars/secrets that exist
    only on the human's machine, the classic overnight killer.
-5. Scheduling: Routine tools available; create + immediately delete a dummy
-   one-shot to prove it.
+5. Scheduling: Routine tools available; run the **canary** (see the runner
+   section) to determine which lane this account supports; report the lane.
 6. Budgets sanity: ticket-count guess from recon vs `max_sessions`.
 7. Browser present? (only if the charter opted into UI prototypes).
 
@@ -117,8 +143,13 @@ Offer `launch` on full pass.
 1. Confirm with the human (one click): arc name, target repo/branch, budgets,
    merge policy line ("per-ticket squash-merged PRs, auto-merged on green").
 2. Create the dashboard issue; store its number in state.md.
-3. Create the babysitter cron + the first one-shot chain link (push
-   notifications on); store ids.
+3. Re-run the canary if preflight's result is stale, then arm the chosen
+   lane. Lane A: create the self-bind babysitter cron and the first
+   `send_later` wake — this conversation becomes the runner, so end the turn
+   after step 4 and remind the human to keep GitHub mobile notifications on
+   (mentions on the dashboard issue are the alert channel). Lane B: create
+   the fresh-session babysitter cron + first one-shot link with push
+   notifications on. Store all trigger ids in state.md either way.
 4. Set `status: RUNNING` (from READY / a repaired HALT / PAUSED-SPEC-REVIEW),
    push, and tell the human what to expect on their phone.
 
@@ -129,7 +160,8 @@ same steps, minus creating things that already exist.
 
 1. Set `status: HALTED-BY-USER`, write a mini halt-report (what was in flight,
    what is safely merged), push.
-2. Disable both Routines.
+2. Delete the arc's pending Routines — chain wake(s) and babysitter cron, ids
+   in state.md.
 3. Update the dashboard title/body.
 4. Tell the human what state things stopped in and that `/autopilot` will offer
    Repair → launch whenever they want to resume. In-flight worker branches are
