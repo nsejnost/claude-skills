@@ -57,18 +57,29 @@ conversation, and note the rotation in session-log.
 
 **Lane B — fresh-session chain (preferred isolation; use only after the
 canary passes).** As lane A, but each link is a one-shot Routine with
-`create_new_session_on_fire: true` and an explicit, verified
-`environment_id`, and the babysitter cron also fires fresh sessions.
-KNOWN PLATFORM ISSUE: on some accounts these Routines fire server-side
-("Ran") yet no session ever materializes — verified failing 12/12 on this
-skill's home account in 2026-07. Never assume lane B works: prove it.
+`create_new_session_on_fire: true`, an explicit verified `environment_id`,
+and **`connectors: ["github"]`** (as held by the creating session) — fired
+sessions inherit NO MCP connectors by default, and web sessions have no gh
+CLI, so an unconnected fired session cannot open or merge PRs at all.
+KNOWN UPSTREAM DEFECT: fresh-session provisioning silently fails on some
+accounts — the trigger is marked `run_once_fired` while the cloud container
+never initializes (anthropics/claude-code#54260, **closed as not planned**;
+13/13 reproduction on this skill's home account — see
+docs/research/2026-07-28-routine-fresh-session-materialization.md). Treat
+lane B as unavailable unless a canary passes today; never plan around a fix.
 
 **The canary (run at launch, and at preflight):** create one one-shot
-fresh-session Routine (~2 minutes out) whose prompt pushes a trivial marker
-commit to a scratch ref (e.g. append a line to `docs/auto/session-log.md` on
-the coordination branch — observable without any UI). If the marker appears
-within ~6 minutes, lane B is usable; otherwise use lane A. Delete the canary
-Routine either way.
+fresh-session Routine (~2 minutes out, explicit environment_id,
+connectors ["github"]) whose prompt creates and pushes a marker commit to a
+**`claude/`-prefixed scratch branch** (`claude/autopilot-canary-<arc>`) —
+Routine-fired sessions may be push-restricted to `claude/*`, so a canary
+targeting the coordination branch could fail forever on permissions and mask
+a healthy platform. Marker appears within ~6 minutes → lane B provisions; the
+canary prompt then ALSO attempts a push to the `auto/<arc>` prefix and
+records which prefixes are writable — that second result decides whether
+lane B uses the standard branch layout or the arc's branches must live under
+`claude/`. No marker → lane A. Delete the canary Routine and scratch branch
+either way.
 
 **Notifications.** Completion push notifications only exist for
 fresh-session Routines — the server rejects the parameter for self-bind. On

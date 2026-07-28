@@ -24,14 +24,19 @@ harness commits from behavior-under-test commits by that prefix.
 1. `python3 tests/fixtures/build_fixture.py <sN|all>` — builds and force-pushes
    the fixture branch(es) `auto/sktest-*` (and `sktest-s7-target` for s7).
 2. **Canary before anything else** — scenario sessions need fresh contexts, so
-   only fresh-session Routines can automate them, and that mechanism is known
-   to fail silently on some accounts (verified 12/12 "Ran"-but-no-session on
-   this skill's home account, 2026-07). Create ONE one-shot fresh-session
-   Routine ~2 minutes out whose prompt is: "git fetch origin auto/sktest-s1 &&
-   git checkout auto/sktest-s1, append a line '[skill-test] canary <UTC time>'
-   to .skill-test/canary.txt, commit with message '[skill-test] canary', push,
-   end." Tell the user to reply in ~5 minutes; on their reply, fetch the
-   branch and check for the canary commit.
+   only fresh-session Routines can automate them, and fresh-session
+   provisioning is a known upstream defect that fails silently
+   (anthropics/claude-code#54260, closed as not planned; 13/13 on this
+   skill's home account — see docs/research/). Expect the canary to fail.
+   Create ONE one-shot fresh-session Routine ~2 minutes out (explicit
+   environment_id, connectors ["github"]) whose prompt is: "create branch
+   claude/sktest-canary from origin/main, add a file canary.txt containing
+   the current UTC time, commit '[skill-test] canary', push, end." (A
+   `claude/`-prefixed branch on purpose — fired sessions may be
+   push-restricted to that prefix; probing an `auto/*` branch could fail on
+   permissions and mask a healthy platform.) Tell the user to reply in ~5
+   minutes; on their reply, check origin for the branch. Delete the canary
+   Routine and branch afterward.
 3. **Canary passed** → for each scenario, create a one-shot fresh-session
    Routine with the scenario prompt from `references/scenarios.md`, spaced ~4
    minutes apart, plus one **collector Routine** ~6 minutes after the last
