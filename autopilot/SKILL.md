@@ -154,7 +154,7 @@ Mergeability-skeptic red-team pass. Gate: sizes, DAG, independent mergeability
    disjoint `Touches:` sets and unblock-count (tie → lowest id). Overlapping
    frontier → smaller wave, down to 1.
 3. **Dispatch workers in parallel** — one subagent per ticket, each in an
-   **isolated git worktree** on branch `auto/<arc>/tNN` cut from `origin/main`.
+   **isolated git worktree** on branch `auto/<arc>-tNN` cut from `origin/main`.
    Worker brief and TDD loop per the playbook: red → green at the ticket's
    pre-agreed seams only, red-run evidence logged, single test files while
    iterating, full sweep at the end, no refactoring inside the loop, commit

@@ -179,7 +179,7 @@ Throwaway code that answers a design question; the question decides the shape.
   param; screenshots are the artifact.
 
 Rules: no tests, no polish, no persistence; commit to a scratch branch
-(`auto/<arc>/proto-NN`), never merged, deleted at FINISH; the **verdict** is
+(`auto/<arc>-proto-NN`), never merged, deleted at FINISH; the **verdict** is
 what survives — recorded in `docs/auto/notes/` and cited as ADR evidence. The
 "reaction" the attended skill gets from a human comes instead from the Decider
 judging the artifacts against the charter's conventions and priorities — which

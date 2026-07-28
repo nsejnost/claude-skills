@@ -28,7 +28,7 @@ git checkout auto/<arc>
 #    protocol was violated → HALT with both versions preserved in the report)
 ```
 
-Ticket branches `auto/<arc>/tNN` are cut from `origin/main` at dispatch, live
+Ticket branches `auto/<arc>-tNN` are cut from `origin/main` at dispatch, live
 only until their squash-merge, and are deleted after. `--force-with-lease` is
 permitted on these branches only.
 
@@ -120,7 +120,7 @@ exists — non-web environments — the equivalent commands are fine):
 
 | Operation | How |
 | --- | --- |
-| Open PR | create_pull_request (head `auto/<arc>/tNN`, base main, body per formats.md) |
+| Open PR | create_pull_request (head `auto/<arc>-tNN`, base main, body per formats.md) |
 | Check CI on a PR | pull_request_read / get_check_run — poll with a deadline of `ci_wait_minutes`; never wait unbounded |
 | Fetch failure logs | get_job_logs (failed jobs only) |
 | Re-run suspected flake | actions_run_trigger / rerun failed — at most `flake_reruns` per attempt |
