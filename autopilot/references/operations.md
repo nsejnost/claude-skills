@@ -43,11 +43,15 @@ The launch session itself becomes the **runner conversation**. Each wake: run
 one unit per the session protocol, push state, then — only when the pushed
 state says `RUNNING` — call `send_later` (2–5 minutes out, message
 `/autopilot run`) and END THE TURN so the fire can wake the conversation.
-Store each pending trigger id in state.md. The babysitter is an **hourly cron
-Routine bound to the same conversation** (create_trigger default self-bind
-mode), created once at launch — if a wake dies mid-wave, the next cron fire
-re-wakes the conversation; the claim protocol makes overlapping wakes exit
-quietly. Context accrues across wakes; that is acceptable because the disk is
+Store each pending trigger id in state.md. The babysitter is an **hourly fresh-session cron the HUMAN creates once in
+the claude.ai Routines dashboard at launch** — launch prints the exact prompt
+and settings to paste. UI-created fresh-session Routines provision correctly
+even where MCP-created ones fail (verified 2026-07-28: commit 1fc5d2e pushed
+by a UI-fired session), an out-of-band fresh session can recover even a
+wedged runner conversation (which a self-bind cron cannot), and fresh-session
+Routines carry push notifications. If the human skips the UI step, fall back
+to a self-bind hourly cron bound to the runner conversation. Either way the
+claim protocol makes overlapping wakes and sessions exit quietly. Context accrues across wakes; that is acceptable because the disk is
 the program — every wake re-reads charter/state/tickets from origin and never
 relies on conversation memory (platform auto-compaction handles the rest).
 **Runner takeover** (corrupted or lost runner conversation): from any new
@@ -65,8 +69,14 @@ KNOWN UPSTREAM DEFECT: fresh-session provisioning silently fails on some
 accounts — the trigger is marked `run_once_fired` while the cloud container
 never initializes (anthropics/claude-code#54260, **closed as not planned**;
 13/13 reproduction on this skill's home account — see
-docs/research/2026-07-28-routine-fresh-session-materialization.md). Treat
-lane B as unavailable unless a canary passes today; never plan around a fix.
+docs/research/2026-07-28-routine-fresh-session-materialization.md). The
+failure is specific to **MCP-created** triggers: an identical routine created
+by hand in the claude.ai Routines dashboard provisions and executes
+(verified; create_trigger cannot attach a repository, which likely leaves
+MCP-fired containers hanging at clone). So lane B *automation* — sessions
+scheduling sessions — is what's blocked; human/UI-created fresh-session
+Routines work. Treat automated lane B as unavailable unless a canary passes
+today; never plan around a fix.
 
 **The canary (run at launch, and at preflight):** create one one-shot
 fresh-session Routine (~2 minutes out, explicit environment_id,

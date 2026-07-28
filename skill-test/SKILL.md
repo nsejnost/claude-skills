@@ -46,7 +46,11 @@ harness commits from behavior-under-test commits by that prefix.
    scenario prompts (filled from the template) in run order, tell the user to
    paste each into a fresh session and reply here when done; collect then runs
    from any session. Self-bind cannot substitute — it would reuse one
-   conversation and break scenario isolation.
+   conversation and break scenario isolation. Automation alternative: the
+   user can create the scenario Routines by hand in the claude.ai Routines
+   dashboard (UI-created fresh-session Routines provision even where
+   MCP-created ones fail) — print the prompts and staggered fire times for
+   them to paste into the UI.
 
 **`collect`** — judge and report (run by the collector Routine, or manually):
 

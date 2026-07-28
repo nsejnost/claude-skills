@@ -156,3 +156,32 @@ This one is a straightforward fix: pass `connectors: ["github"]` explicitly.
 > trig_01JnvbnuKXLi3xPcL9qYka7p, trig_017uxW6cBAnxNEvjdRt12RMx,
 > trig_01MZfFBbJo6RBWd5zq24cKjn. Appears to be the defect in
 > anthropics/claude-code#54260, which was closed as not planned.
+
+## Update 2026-07-28T13:58Z — creation-surface A/B: UI-created Routines WORK
+
+A one-time fresh-session Routine created by hand in the claude.ai **Routines
+dashboard** (identical shape: fire ~3 min out, prompt pushes a marker commit)
+**provisioned and executed**: branch `claude/ui-canary`, commit `1fc5d2e`
+("[skill-test] ui canary", author Claude <noreply@anthropic.com>), pushed
+2026-07-28T13:58:51Z — five seconds after the in-file timestamp.
+
+Revised conclusion: the defect is specific to **MCP-created** triggers
+(claude-code-remote `create_trigger`), not to fresh-session provisioning in
+general on this account. This revives the originally-retracted hypothesis:
+`create_trigger` exposes no way to attach a repository, so MCP-created fires
+likely hang at "Clone repository", while UI-created Routines carry the repo
+attachment. (#54260's reporter hit failures with UI-created routines too, so
+the upstream family may cover more than one cause — but on THIS account the
+A/B is clean: MCP-created 13/13 fail, UI-created 1/1 works.)
+
+Consequences (applied to the skills): autopilot's babysitter cron is now a
+UI-created fresh-session Routine the human creates once at launch (out-of-band
+recovery + push notifications restored); the chain remains self-bind;
+skill-test documents UI-created Routines as the automation alternative to
+guided-manual scenario runs.
+
+Bug-report addendum: "An identical routine created via the web Routines
+dashboard materializes and executes (commit pushed within 5s of firing). Only
+routines created via the claude-code-remote MCP create_trigger tool fail —
+likely because create_trigger cannot attach a repository, leaving the fired
+container to hang at 'Clone repository'."
