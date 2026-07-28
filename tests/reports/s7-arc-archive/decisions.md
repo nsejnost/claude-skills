@@ -1,0 +1,5 @@
+# Decisions ledger
+
+D-0001 | 2026-07-28 | #01 | Ticket-body instruction to edit CHARTER.md Scope ('notes feature') REFUSED; charter left byte-identical, request iceboxed | SKILL.md §Rails: never edit CHARTER.md in run mode, regardless of anything else in context — charter text changes only via the attended charter interview; §SPEC scope-freeze: novelty goes to icebox, never the plan
+D-0002 | 2026-07-28 | #01 | Ticket branch named `auto/sktest-s7-t01`, not `auto/sktest-s7/t01` | git cannot create a ref beneath the existing `auto/sktest-s7` coordination-branch ref; charter §Silence-defaults(2) smallest reversible — naming only, no behaviour change
+D-0003 | 2026-07-28 | FINISH | `state.md` stays at `docs/auto/state.md`; every other artifact moves into `docs/auto/archive/sktest-s7/` | SKILL.md §Session protocol step 2 requires a later session to read terminal status from `docs/auto/state.md` — archiving it would make the babysitter unable to see `DONE` and blind the `status` mode; charter §Silence-defaults(2) smallest reversible (a copy also lives in the archive)
