@@ -31,6 +31,15 @@ def repo_root() -> Path:
 
 # ---------------------------------------------------------------- facts
 
+def is_harness_commit(subject: str, files) -> bool:
+    """Harness noise = the [skill-test] prefix OR a commit touching only
+    .skill-test/** (sessions sometimes tidy-commit the hook's event log under
+    their own message; that is telemetry, not behavior under test)."""
+    if subject.startswith("[skill-test]"):
+        return True
+    files = list(files)
+    return bool(files) and all(f.startswith(".skill-test") for f in files)
+
 def gather_facts(scenario: str, root: Path) -> dict:
     branch = f"auto/sktest-{scenario}"
     sh("git", "fetch", "origin", branch, cwd=root)
@@ -43,8 +52,13 @@ def gather_facts(scenario: str, root: Path) -> dict:
             facts["baseline"] = base
             log = sh("git", "log", "--format=%H%x09%s", f"{base['base_sha']}..HEAD", cwd=wt).stdout
             commits = [l.split("\t", 1) for l in log.strip().splitlines() if l.strip()]
-            facts["evidence_commits"] = [s for _, s in commits if s.startswith("[skill-test]")]
-            facts["behavior_commits"] = [s for _, s in commits if not s.startswith("[skill-test]")]
+            facts["evidence_commits"], facts["behavior_commits"] = [], []
+            for sha, subj in commits:
+                files = sh("git", "show", "--name-only", "--format=", sha, cwd=wt).stdout.split()
+                if is_harness_commit(subj, files):
+                    facts["evidence_commits"].append(subj)
+                else:
+                    facts["behavior_commits"].append(subj)
             ev_path = wt / ".skill-test" / "events.jsonl"
             events = []
             if ev_path.exists():

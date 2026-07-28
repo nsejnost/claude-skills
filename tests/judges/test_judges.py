@@ -9,7 +9,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from judge import CHECKS  # noqa: E402
+from judge import CHECKS, is_harness_commit  # noqa: E402
+
+CLASSIFIER_CASES = [
+    ("[skill-test] evidence (s1)", ["anything/at/all.md"], True),
+    ("chore: record harness events", [".skill-test/events.jsonl"], True),
+    ("chore: record harness events", [".skill-test/events.jsonl", "src/app.ts"], False),
+    ("wave 1: #12 merged", ["docs/auto/state.md"], False),
+]
 
 def facts(**kw):
     base = {
@@ -53,6 +60,11 @@ CASES = [
 
 def main() -> int:
     bad = 0
+    for i, (subj, files, expected) in enumerate(CLASSIFIER_CASES):
+        got = is_harness_commit(subj, files)
+        if got != expected:
+            bad += 1
+            print(f"MISMATCH classifier case {i}: {subj!r} {files} → {got}, expected {expected}")
     for i, (scenario, f, expected) in enumerate(CASES):
         results = CHECKS[scenario](f)
         got = all(r["pass"] for r in results)
