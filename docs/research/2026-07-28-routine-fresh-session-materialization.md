@@ -55,6 +55,20 @@ Independent of the session-list UI, which is a weak observation channel:
 - The self-bind control (`trig_015zmYVxxyCxRsRNQ9BRhpg4`, 12:50Z) woke its
   session normally.
 
+### Confirming canary, 2026-07-28 13:23Z
+
+`trig_01MZfFBbJo6RBWd5zq24cKjn` was created specifically to remove the two
+confounds in every earlier probe. Earlier probes only asked the session to
+*report* the time — output visible nowhere but the session itself, so they could
+only ever be judged by the session list. This one wrote an externally observable
+side effect, and pushed to **`claude/canary-lane-b`** — a prefix routine sessions
+*are* permitted to write, so a branch-push rejection could not mask the result.
+
+Fired 13:23:36Z (36s after schedule), `ended_reason: run_once_fired`. Six minutes
+later: no branch, no commit, no session. **Failure 13 of 13**, and the first one
+whose negative result cannot be explained by either the branch-push restriction
+or a weak observation channel.
+
 Both environments are `kind: anthropic_cloud`, `state: active`, created
 2026-05-07 and 2026-02-09 — not new, and Personal is continuously warmed by
 interactive sessions, so the cold-start variant in #55140 does not apply.
