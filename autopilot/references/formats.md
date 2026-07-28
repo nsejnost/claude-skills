@@ -92,7 +92,11 @@ Supersedes: — | D-00NN (new evidence: <ref>)
 
 **VALIDATE**
 - [ ] CHARTER.md exists; sentinel line absent
-- [ ] Every Done-when line executed successfully as written during validation
+- [ ] Every Done-when line executed as written: the command RUNS and yields a
+      determinate result. UNMET at arc start is EXPECTED — Done-when defines
+      termination, not entry; record each line's met/unmet status as the arc
+      baseline. Only a command that cannot execute at all (not found,
+      malformed, hangs) fails this check
 - [ ] Priorities strictly ranked (no ties); budgets numeric; no-touch zones listed
 - [ ] Baselines recorded (test count, xfail/skip, ratchet commands run once)
 
