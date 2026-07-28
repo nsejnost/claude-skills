@@ -29,7 +29,7 @@ runner is a self-scheduling chain of web sessions.
 
 | Mode | Attendance | Does |
 | --- | --- | --- |
-| `charter` | human required | Interview → CHARTER.md. Sub-modes New / Renewal / Repair. Refuses to run headless. |
+| `charter` | human required | Interview → CHARTER.md; on confirmed read-back sets `status: READY` (its one state edit). Sub-modes New / Renewal / Repair. Refuses to run headless. |
 | `preflight` | human present | Prove the run cannot hang: validate charter, environment, GitHub access, baselines — in the same kind of session runs will use. |
 | `launch` | human present | Create the dashboard issue and the scheduling Routines (with phone push notifications), set `status: RUNNING`, start the chain. Also re-arms after a HALT repair or a spec-review pause. |
 | `run` | headless | One unit of autonomous work (one phase step or one build wave), then schedule the next session and exit. |

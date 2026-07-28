@@ -1,0 +1,24 @@
+name: skill-lint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["autopilot/**", "skill-test/**", "tests/**", ".claude/**"]
+  pull_request:
+    paths: ["autopilot/**", "skill-test/**", "tests/**", ".claude/**"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile harness
+        run: python -m compileall -q tests
+      - name: Static lint (autopilot structure)
+        run: python tests/static_lint.py | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Judge self-tests (synthetic facts)
+        run: python tests/judges/test_judges.py | tee -a "$GITHUB_STEP_SUMMARY"
