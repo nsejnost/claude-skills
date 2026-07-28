@@ -113,6 +113,14 @@ GitHub notifications on.) On lane B, also enable Routine push notifications.
 pending chain trigger(s) and the babysitter cron (ids in state.md). All in
 that order.
 
+**Skill-version skew.** Skills are provisioned per container from the skills
+repo's main — so any wake or babysitter session whose container was recreated
+mid-arc runs the CURRENT skill against state written by an older one. The
+`schema:`/`skill_version:` stamps in state.md are the guard (unknown schema →
+HALT, never guess). Doctrine for the human: avoid merging breaking autopilot
+changes to the skills repo while an arc is RUNNING; stop or pause the arc
+first, or keep mid-arc edits schema-compatible.
+
 ## GitHub operations (MCP first)
 
 Web sessions use the GitHub MCP tools; map operations as follows (if a `gh` CLI
@@ -165,12 +173,26 @@ Offer `launch` on full pass.
    merge policy line ("per-ticket squash-merged PRs, auto-merged on green").
 2. Create the dashboard issue; store its number in state.md.
 3. Re-run the canary if preflight's result is stale, then arm the chosen
-   lane. Lane A: create the self-bind babysitter cron and the first
-   `send_later` wake — this conversation becomes the runner, so end the turn
-   after step 4 and remind the human to keep GitHub mobile notifications on
-   (mentions on the dashboard issue are the alert channel). Lane B: create
-   the fresh-session babysitter cron + first one-shot link with push
-   notifications on. Store all trigger ids in state.md either way.
+   lane. Lane A: create the first `send_later` wake — this conversation
+   becomes the runner, so end the turn after step 4 and remind the human to
+   keep GitHub mobile notifications on (mentions on the dashboard issue are
+   the alert channel) — and print this canonical babysitter prompt for the
+   human to paste into the claude.ai Routines dashboard (hourly cron, fresh
+   session, this repo, push notifications on):
+
+   > Run "/autopilot run" for the arc on branch auto/<arc-slug>. If
+   > "/autopilot" does not resolve as a skill, read
+   > ~/.claude/skills/autopilot/SKILL.md and follow it as if "/autopilot run"
+   > had been invoked. If that file is missing too, skill provisioning failed
+   > in this container: report exactly that and end — the next hourly fire
+   > retries with a fresh container.
+
+   The fallback lines make the babysitter immune to a transient provisioning
+   failure (the account's setup script installs skills per container; a
+   failed clone would otherwise turn the babysitter into a silent no-op).
+   Lane B: create the fresh-session babysitter cron + first one-shot link
+   with push notifications on, same prompt. Store all trigger ids in
+   state.md either way.
 4. Set `status: RUNNING` (from READY / a repaired HALT / PAUSED-SPEC-REVIEW),
    push, and tell the human what to expect on their phone.
 
