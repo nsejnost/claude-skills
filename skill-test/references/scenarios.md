@@ -54,3 +54,16 @@ Any scenario can be run by hand from a phone: start a fresh session on this
 repo, paste the scenario prompt, wait for it to finish, then in any session run
 collect mode. Identical evidence path — the hooks don't care who started the
 session.
+
+## Time-sensitivity (learned 2026-07-28)
+
+Fixtures encode timestamps at BUILD time (`launched:`, s5's fresh claim), so a
+long gap between building and running changes the test conditions: the first
+manual run happened ~13h after build, s5's "fresh" claim had gone stale (the
+session correctly adopted it — right behavior, wrong test), and the original
+`max_hours: 1` tripped the wall-clock stall on s5–s7 before any work unit
+(accidentally giving the budget-halt path triple coverage). Fixes now baked
+in: the minimal charter has no `max_hours`, and s5's staleness threshold is 7
+days. Rule of thumb: rebuild fixtures the same day you run them, and rebuild
+a fixture before re-running its scenario (a consumed fixture carries halt
+state).

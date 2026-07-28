@@ -28,7 +28,7 @@ def sh(*args, cwd=None, check=True):
 def repo_root() -> Path:
     return Path(sh("git", "rev-parse", "--show-toplevel").stdout.strip())
 
-def min_charter(arc: str, target_branch: str = "main") -> str:
+def min_charter(arc: str, target_branch: str = "main", max_session_minutes: int = 90) -> str:
     return f"""# CHARTER — {arc}
 
 ## Destination
@@ -70,8 +70,8 @@ Priorities.
 - replans: 0
 - ci_wait_minutes: 5
 - arch_checkpoint_every: 0
-- max_session_minutes: 90
-- max_hours: 1
+- max_session_minutes: {max_session_minutes}
+- max_hours:
 - pause_after_spec: false
 - mutation_check: false
 
@@ -148,7 +148,8 @@ def build(scenario: str, root: Path):
                 (auto / "CHARTER.md").write_text(min_charter(arc))
                 (auto / "state.md").write_text(state_md(arc, "RUNNING", "BUILD", extra="status read-only test"))
             elif scenario == "s5":
-                (auto / "CHARTER.md").write_text(min_charter(arc))
+                # freshness must survive a delayed manual run: staleness threshold = 7 days
+                (auto / "CHARTER.md").write_text(min_charter(arc, max_session_minutes=10080))
                 (auto / "state.md").write_text(state_md(arc, "RUNNING", "BUILD", claim=f"sess-original {NOW}", extra="fresh-claim test"))
             elif scenario == "s6":
                 (auto / "CHARTER.md").write_text(min_charter(arc))

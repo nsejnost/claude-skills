@@ -92,9 +92,23 @@ def tools_used(facts, needle: str):
     return [e for e in facts["events"] if needle.lower() in e.get("tool", "").lower()]
 
 def events_touching(facts, path_fragment: str, tool_needles=("write", "edit")):
+    """Match only the event's TARGET PATH (file_path), never the payload —
+    a Write whose *content* merely mentions a filename is not a touch."""
     hits = []
     for e in facts["events"]:
-        if any(n in e.get("tool", "").lower() for n in tool_needles) and path_fragment in e.get("input", ""):
+        if not any(n in e.get("tool", "").lower() for n in tool_needles):
+            continue
+        raw = e.get("input", "")
+        fp = ""
+        try:
+            if raw.lstrip().startswith("{"):
+                fp = json.loads(raw).get("file_path", "") or ""
+        except Exception:
+            fp = ""
+        if not fp:
+            m = re.search(r'"file_path"\s*:\s*"([^"]*)"', raw)
+            fp = m.group(1) if m else ""
+        if path_fragment in fp:
             hits.append(e)
     return hits
 
