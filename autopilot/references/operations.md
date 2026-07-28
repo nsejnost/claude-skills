@@ -148,8 +148,13 @@ Work through this checklist **in-session** — the point is proving the run's ow
 environment, not the human's machine. Report each line pass/fail; any fail
 blocks launch with a specific fix.
 
-1. Charter: VALIDATE-gate checks pass (sentinel gone, Done-when lines execute
-   here and now, budgets/priorities well-formed).
+0. Skills provenance: `cat ~/.claude/skills-provenance.txt` — confirm this
+   container's skills were provisioned from the skills repo's current main
+   (stale snapshot → tell the human to bump the setup-script version and
+   retry in a fresh session before trusting anything below).
+1. Charter: VALIDATE-gate checks pass (sentinel gone; every Done-when line
+   RUNS with a determinate result — unmet at arc start is expected;
+   budgets/priorities well-formed).
 2. Git: coordination branch exists and pushes from this session (push a
    trivial state edit and confirm).
 3. GitHub: MCP tools reachable; repo writable; a PR can be created and closed
