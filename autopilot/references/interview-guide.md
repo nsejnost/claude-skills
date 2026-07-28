@@ -82,6 +82,28 @@ One question per message. Multi-part questions get shallow answers.
    understanding; then return to the (possibly revised) original question.
    Log with [CLARIFICATION] / [OPTION-REVISED] tags (format in formats.md).
 
+**Per-question compliance template (required — do not compress).** Every
+choice question's message MUST carry this shape in prose, before the clickable
+prompt:
+
+> **Deciding:** <what this settles, and the charter line it will write>
+> **Why it matters mid-run:** <the concrete failure a good answer prevents>
+> **A — <label>.** Pros: <…> Cons: <…>
+> **B — <label>.** Pros: <…> Cons: <…>
+> **Recommendation: <X>, because <rationale tied to a recon fact or an
+> earlier answer — something the human can dispute>.**
+> *Not sure what's being asked? Type a question into "Other" — clarification
+> is free, doesn't count against the budget, and the original question comes
+> back afterward.*
+
+The final line is mandatory on every question — never assume the human knows
+the Other field doubles as the clarification channel. The option descriptions
+inside the clickable prompt are one-line distillations OF this prose, never a
+substitute for it. Self-check: if your question messages are getting shorter
+than this template, you are compressing — stop and re-read this protocol. The
+context layer IS the interview; a bare prompt with terse options recreates
+exactly the shallow-answer failure the one-question rule exists to prevent.
+
 Two question shapes: most sections are choice-shaped and use the full loop.
 Generative questions (Destination, the braindump, first-pass Done-when) open as
 free text; then convert your synthesis into clickable choices ("three tightened
