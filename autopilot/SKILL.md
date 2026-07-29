@@ -51,14 +51,21 @@ present; a timeout proves headless and takes the headless path. A missed or
 denied tool approval is not evidence of absence (verified 2026-07-29: a
 present human was misclassified headless off exactly that signal).
 
-**Interview output contract** (charter and Repair, enforced — the guide's
-protocol is not compressible): every question message carries the prose
-template (context, per-option pros/cons, recommendation with rationale, the
-Other-as-clarification reminder) — clickable option descriptions are
-distillations of that prose, never a substitute. Read-backs are non-simulable:
-a section or full-charter confirmation question is lawful ONLY in a turn whose
-visible text already contains the exact text being confirmed. "As read back
-above" with nothing above is a protocol violation, not a shortcut.
+**Interview output contract** (charter and Repair — attempt three, now
+structural: instruction-based delivery failed two verified acceptance tests,
+2026-07-29): the template — what's being decided, why it matters mid-run,
+pros AND cons per option, recommendation with rationale, and the "type a
+question into Other for clarification" reminder — travels INSIDE the
+clickable prompt's own question text, where the human reads it at decision
+time. A question call whose text lacks the template is unlawful to make;
+chat prose may add color but never substitutes, and option descriptions stay
+one-line distillations. Each question's template block is also logged
+verbatim in charter-interview.md (format in references/formats.md), so
+section gates and audits verify compliance mechanically. Read-backs are
+non-simulable: a section or full-charter confirmation question is lawful
+ONLY in a turn whose visible text already contains the exact text being
+confirmed. "As read back above" with nothing above is a protocol violation,
+not a shortcut.
 
 ## Where state lives: the coordination branch
 

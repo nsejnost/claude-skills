@@ -56,10 +56,11 @@ unlabelled suggestions anchor. Never silently write a fact into the charter.
 
 One question per message. Multi-part questions get shallow answers.
 
-1. **Context in prose, before the clickable prompt**: what's being decided, why
-   it matters for the run, then the **pros, cons, and implications of every
-   option — equal analytical effort each**; the recommended option's cons are
-   never softened. Then the **recommendation and its rationale**, tied to
+1. **Context inside the clickable prompt's question text** (chat prose may
+   duplicate it, never replace it — two live interviews proved separate prose
+   gets dropped): what's being decided, why it matters for the run, then the
+   **pros, cons, and implications of every option — equal analytical effort
+   each**; the recommended option's cons are never softened. Then the **recommendation and its rationale**, tied to
    something checkable (a recon fact, an earlier answer, the ranked priorities)
    so the human can dispute the premise, not just the pick.
 2. **The clickable prompt** (AskUserQuestion): recommended option first,
@@ -82,9 +83,11 @@ One question per message. Multi-part questions get shallow answers.
    understanding; then return to the (possibly revised) original question.
    Log with [CLARIFICATION] / [OPTION-REVISED] tags (format in formats.md).
 
-**Per-question compliance template (required — do not compress).** Every
-choice question's message MUST carry this shape in prose, before the clickable
-prompt:
+**Per-question compliance template (required — structural since 2026-07-29,
+after chat-prose delivery failed two verified acceptance tests).** Every
+choice question MUST embed this shape inside the clickable prompt's own
+question text — the dialog is where the human decides, so the dialog carries
+the analysis:
 
 > **Deciding:** <what this settles, and the charter line it will write>
 > **Why it matters mid-run:** <the concrete failure a good answer prevents>
@@ -97,12 +100,15 @@ prompt:
 > back afterward.*
 
 The final line is mandatory on every question — never assume the human knows
-the Other field doubles as the clarification channel. The option descriptions
-inside the clickable prompt are one-line distillations OF this prose, never a
-substitute for it. Self-check: if your question messages are getting shorter
-than this template, you are compressing — stop and re-read this protocol. The
-context layer IS the interview; a bare prompt with terse options recreates
-exactly the shallow-answer failure the one-question rule exists to prevent.
+the Other field doubles as the clarification channel. Option descriptions
+stay one-line distillations OF the question text's analysis. Each question's
+template block is also logged verbatim in the interview transcript (formats),
+where the section read-back gates verify it mechanically — a QN entry without
+its block fails the gate. Self-check: if your question texts are getting
+shorter than this template, you are compressing — stop and re-read this
+protocol. The context layer IS the interview; a bare prompt with terse
+options recreates exactly the shallow-answer failure the one-question rule
+exists to prevent.
 
 Two question shapes: most sections are choice-shaped and use the full loop.
 Generative questions (Destination, the braindump, first-pass Done-when) open as

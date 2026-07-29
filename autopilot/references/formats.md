@@ -216,7 +216,10 @@ Sessions used: <n>/<budget> · waves: <n> · attempts spent: <n>
 ```
 # Charter interview — <arc> — <date> — mode: NEW|RENEWAL|REPAIR
 ## <section>
-Q1: <question as asked>
+Q1: <question as asked — embeds the full template block: Deciding / Why it
+    matters mid-run / per-option pros+cons / Recommendation with rationale /
+    the Other-clarification reminder. A QN entry missing its block is a
+    section-gate finding>
   options: A <label> | B <label> (Recommended) | C <label>
 A1: B [CLICKED]                        # or [TYPED] verbatim text
 C1: <clarification question the human typed> → <answer gist> [CLARIFICATION]
