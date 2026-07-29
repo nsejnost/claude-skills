@@ -1,6 +1,6 @@
 # Post-mortem — csv-export arc (autopilot v1.0, first production run)
 
-Date: 2026-07-30 · Target repo: nsejnost/tracklist-sandbox · Skill: autopilot 1.0
+Date: 2026-07-29 · Target repo: nsejnost/tracklist-sandbox · Skill: autopilot 1.0
 (schema 1) · Runner: Lane A self-bind chain + UI-created hourly babysitter.
 
 Evidence: the frozen spec, the DONE status report, dashboard/session screenshots,
@@ -13,13 +13,13 @@ from origin.
 
 **The skill did the thing it was built for.** A human-authored charter went to
 merged-on-main with zero mid-run human decisions: the only human touches after
-launch were approval taps for chain wakes (optional by design), the
-`pause_after_spec` review (a deliberate checkpoint), and one bedtime state nudge
-(covering a skill defect fixed the same night). Every unattended hour was
+launch were approval taps for chain wakes (optional by design) and the
+`pause_after_spec` review (a deliberate checkpoint). Every unattended hour was
 carried by the babysitter exactly as the approval-reality doctrine predicted.
 Eight findings surfaced across the arc's lifecycle; all eight were patched to
 main the same day they were found, none required touching the running arc's
-state, and two of the fixes were validated *by* the run before it finished.
+state, and one was exercised by the run itself: the babysitter survived the
+spec pause (its headless disable was refused) and carried BUILD to DONE.
 
 ## Outcome metrics
 
@@ -29,7 +29,7 @@ state, and two of the fixes were validated *by* the run before it finished.
 | Build waves | 2 (#06 solo → #07 ∥ #08) | max_parallel 3 |
 | Halts / gate failures / replans | 0 / 0 / 0 | — |
 | Sessions used | 11/40 | 3.6× headroom |
-| Unattended stint | 01:12Z → 07:00Z (~6 h) | max_hours 24 (re-stamped) |
+| Wall clock | 01:12Z → 07:00Z on 07-29 (~5.8 h incl. ~1 h review pause) | max_hours 24; elapsed 5.8 |
 | Tests | 80/80 green (63 baseline + 12 engine + 5 UI) | spec floor ≥75; math exact |
 | Bundle | 216 KB | ratchet ≤ 230 KB |
 | Done-when | 5/5 re-verified against main | charter |
@@ -39,17 +39,27 @@ state, and two of the fixes were validated *by* the run before it finished.
 
 ## Timeline
 
+All times 2026-07-29 UTC — the arc's whole life fit one calendar day; the
+human's overnight fell inside it because ET midnight is 04:00Z.
+
 | When (Z) | What |
 | --- | --- |
-| 07-29 ~00:30 | Charter interview (compression defect found mid-flight, patched) |
-| 07-29 01:00–01:45 | Launch; VALIDATE passes (Auditor 4/4); wake armed |
-| 07-29 01:45–03:40 | MAP → DECIDE (16 D-entries, research + prototype) → SPEC frozen (Auditor 5/5) |
-| 07-29 03:40 → 07-30 01:12 | PAUSED-SPEC-REVIEW (~21.5 h human latency; babysitter idled correctly) |
-| 07-30 ~01:00 | Human spec review + re-arm; `launched:` re-stamped 01:12Z |
-| 07-30 ~01:30 | TICKETS gate PASS (caught a real cross-ticket defect); chain wake parks on unanswered approval |
-| 07-30 01:34–07:00 | Babysitter carries BUILD wave 1, wave 2, FINISH at hourly cadence |
-| 07-30 07:00 | DONE. Archive merged, dashboard closed |
-| 07-30 ~11:54 | Parked chain turn resumed by a human "stop" message with a 10 h-stale world-model (defense-in-depth held; new rail patched) |
+| ~00:30 | Charter interview (compression defect found mid-flight, patched) |
+| 01:12–01:45 | Launch (`launched: 01:12Z`); VALIDATE passes (Auditor 4/4); chain armed |
+| 01:45–03:40 | MAP → DECIDE (16 D-entries, research + prototype) → SPEC frozen (Auditor 5/5) |
+| 03:40–~04:45 | PAUSED-SPEC-REVIEW (~1 h same-evening human review; babysitter idled correctly) |
+| ~04:45 | Re-arm (pre-dates the re-stamp fix; the original `launched:` stamp stood) |
+| ~04:50 | TICKETS gate PASS (caught a real cross-ticket defect); chain wake then parks on an unanswered approval |
+| 05:34–07:00 | Babysitter carries BUILD wave 1, wave 2, FINISH at hourly cadence |
+| 07:00 | DONE. Archive merged, dashboard closed |
+| ~11:54 | Parked chain turn resumed by a human "stop" message with a ~7 h-stale world-model (defense-in-depth held; new rail patched) |
+
+Correction (2026-07-29): an earlier revision dated the re-arm and DONE to
+07-30 and inferred a ~21.5 h review pause. Container-clock provenance
+(`setup v18 ran 2026-07-29T13:03Z`, on a container whose skills clone
+post-dates this document's first commit) disproved that: the pause was ~1 h
+and the whole arc ran 01:12–07:00Z on 07-29. Finding 6's fix was authored on
+the mistaken premise — see the corrected ledger row.
 
 ## Defect ledger — 8 found, 8 fixed, 0 open
 
@@ -60,7 +70,7 @@ state, and two of the fixes were validated *by* the run before it finished.
 | 3 | VALIDATE demanded Done-when lines *pass* at arc start (would halt every valid charter) | red-team of the real charter, pre-launch | 92e190b (lines must RUN; unmet = baseline) |
 | 4 | INTEGRATE failures vs consecutive-same-gate HALT unspecified | flow.md traceability audit (PR #6) | d0024c4 (attempts govern; HALT is phase-gates-only) |
 | 5 | Wakes at `PAUSED*` told to disable Routines — would kill the babysitter the resume depends on | reasoning about the live pause | b86a3ab (babysitter survives PAUSED*) |
-| 6 | `max_hours` counted calendar time incl. human review pause (first overnight wake would have halted) | bedtime arithmetic on the live arc | 273c3b4 (re-arm re-stamps `launched:`); **validated in prod** — 01:12Z stamp, guard never fired |
+| 6 | `max_hours` counts calendar time incl. human pauses — a long review pause could eat the whole budget | bedtime arithmetic on the live arc (premise later found mis-dated) | 273c3b4 (re-arm re-stamps `launched:`) — correct doctrine, **unexercised**: the original 01:12Z stamp stood and elapsed 5.8 h never approached 24 h |
 | 7 | Agents cannot disable/delete UI-created Routines (deletion is human-only, not a fallback) | status session's refused attempt | 4a6fc77 (terminal reports hand the human the step) |
 | 8 | A parked turn resumed hours later acts on stale conversation memory (ran stop against a DONE arc) | the sleepwalker incident | 36fa97f (staleness rail: re-fetch before any state change; terminal ⇒ report only) |
 
@@ -73,7 +83,7 @@ stop; all were schema-1-compatible.
    closed not-planned); UI-created ones work → babysitter is human-pasted.
 2. Scheduling MCP tools are "Allow once" per call in the web UI → the chain is
    opportunistic; the babysitter is the guaranteed floor (~1 unit/hour unattended).
-3. Agents cannot modify UI-created Routines (mirror of #1; verified 07-30).
+3. Agents cannot modify UI-created Routines (mirror of #1; verified 07-29).
 4. Branch deletion from sessions is blocked (403 / silently swallowed) → cleanup
    of ticket branches is a human step; runs must not treat it as failure.
 5. MCP servers can re-register under a different tool prefix mid-conversation;
@@ -110,13 +120,13 @@ of these.
 - 8-ticket arc ≈ 11 claiming sessions + ~6 babysitter no-op fires + 3 attended
   sessions (interview, preflight+launch, re-arm).
 - Attended-cadence phases (human approving wakes): VALIDATE→SPEC in ~2.5 h.
-  Unattended cadence: ~1 unit/hour (babysitter floor) → TICKETS+2 waves+FINISH
-  in ~6 h overnight.
+  Unattended cadence: ~1 unit/hour (babysitter floor) → BUILD waves + FINISH
+  in the ~2 h overnight tail.
 - Budget calibration: max_sessions 40 was 3.6× actual; keep generous — the cost
   of headroom is zero, the cost of a mid-BUILD budget halt is a repair cycle.
-- Calendar time is dominated by human latency at deliberate checkpoints
-  (~21.5 h of 30 h wall). That is a feature; `max_hours` now correctly measures
-  only the unattended stints.
+- Total calendar 01:12→07:00Z (~5.8 h), of which ~1 h was the deliberate
+  spec-review pause. `max_hours` (24) was never in sight this arc; the
+  re-stamp doctrine matters for arcs whose pauses span days.
 
 ## Charter lessons for the next arc
 
