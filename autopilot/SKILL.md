@@ -283,3 +283,4 @@ resumes it; repeated resume-without-progress trips the no-progress halt
 - `references/operations.md` — web-native mechanics: coordination-branch git
   protocol, claims, Routine scheduling and notifications, GitHub MCP operations,
   preflight/launch/stop procedures, environment requirements.
+- `references/flow.md` — Control flow: the run's state machine (statuses, phases, ticket lifecycle, loop bounds) as a Mermaid diagram with per-edge source traceability.
