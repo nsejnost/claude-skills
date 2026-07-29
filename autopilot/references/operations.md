@@ -98,6 +98,16 @@ dashboard issue title AND post one comment @-mentioning the repo owner —
 GitHub's mobile app notifies on mentions. (Launch reminds the human to have
 GitHub notifications on.) On lane B, also enable Routine push notifications.
 
+**Approval reality (observed 2026-07):** the web UI grants scheduling MCP
+tools (send_later, create_trigger, delete_trigger) per-call "Allow once" only
+— no always-allow — so a headless wake's re-arm attempt is denied when no
+human is present. This is absorbed by design, not fought: the CHAIN is
+opportunistic (minutes-cadence whenever a human is around to approve), the
+BABYSITTER is the guaranteed floor (hourly, approval-free — its sessions need
+no scheduling tools to do work, only to re-arm the chain, which they may
+skip). Launch must state this cadence picture to the human plainly. A denied
+re-arm is logged, never treated as an error.
+
 **Guards** (all live in the run session/wake, not the Routine):
 - Schedule only when the just-pushed state says `RUNNING`; one next wake,
   never more.
