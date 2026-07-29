@@ -120,8 +120,14 @@ re-arm is logged, never treated as an error.
   claude.ai Routines panel.
 
 **Stopping the chain** is therefore: set a terminal status, push, delete the
-pending chain trigger(s) and the babysitter cron (ids in state.md). All in
-that order.
+pending chain trigger(s) (ids in state.md) — and for the babysitter, TELL THE
+HUMAN. Agents cannot disable or delete a UI-created Routine (verified
+2026-07-30: the platform refuses modification of Routines the agent did not
+create — the mirror of the creation bug that makes the babysitter UI-created
+in the first place). Every terminal-state report and status output must
+instruct the human to remove the babysitter in the claude.ai Routines
+dashboard; until they do it fires a harmless hourly see-terminal-and-exit
+session.
 
 **Skill-version skew.** Skills are provisioned per container from the skills
 repo's main — so any wake or babysitter session whose container was recreated
@@ -225,8 +231,9 @@ create it via MCP (#54260).
 
 1. Set `status: HALTED-BY-USER`, write a mini halt-report (what was in flight,
    what is safely merged), push.
-2. Delete the arc's pending Routines — chain wake(s) and babysitter cron, ids
-   in state.md.
+2. Delete the arc's pending chain wake(s) (ids in state.md). The UI-created
+   babysitter cron is beyond agent reach — hand the human the exact step:
+   claude.ai Routines dashboard → delete/pause the babysitter.
 3. Update the dashboard title/body.
 4. Tell the human what state things stopped in and that `/autopilot` will offer
    Repair → launch whenever they want to resume. In-flight worker branches are
