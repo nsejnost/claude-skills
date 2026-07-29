@@ -147,12 +147,19 @@ of these.
 1. **Skill status: production-ready** for arcs of this shape on this account.
    Version freeze at 1.0/schema 1 held for the whole arc; setup script now v17
    → all fixes propagate.
-2. Backlog, in rough priority: (a) test repo-level `.claude/settings.json`
-   permission allowlisting of the scheduling tools — if it works, the chain
-   stops being approval-gated and unattended cadence drops from ~60 min to
-   ~3 min; (b) first-exercise the Repair path deliberately (e.g. induce a
-   benign HALT in a sandbox arc); (c) skill-atlas.html refresh; (d) upstream
-   follow-up on #54260 with the 14/14 repro data.
+2. Backlog, in rough priority: (a) ~~test `.claude/settings.json`
+   allowlisting of the scheduling tools~~ — CLOSED 07-29, answer is no:
+   three provenance-verified rounds (repo allow rules, user allow rules,
+   user `defaultMode: bypassPermissions`) all still prompt; root cause is
+   the server-side `requiresUserInteraction` annotation, which by documented
+   design defeats allow rules and every permission mode. Babysitter floor is
+   the permanent web architecture; remaining paths are an Agent SDK harness
+   (needs an API key) or an upstream change — see
+   `2026-07-29-scheduling-tool-approval-policy.md`; (b) first-exercise the
+   Repair path deliberately (e.g. induce a benign HALT in a sandbox arc);
+   (c) skill-atlas.html refresh; (d) upstream follow-up on #54260 with the
+   14/14 repro data, now bundled with the `requiresUserInteraction`
+   feature-ask from (a).
 
 ## Evidence gaps
 

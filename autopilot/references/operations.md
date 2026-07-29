@@ -98,10 +98,16 @@ dashboard issue title AND post one comment @-mentioning the repo owner —
 GitHub's mobile app notifies on mentions. (Launch reminds the human to have
 GitHub notifications on.) On lane B, also enable Routine push notifications.
 
-**Approval reality (observed 2026-07):** the web UI grants scheduling MCP
-tools (send_later, create_trigger, delete_trigger) per-call "Allow once" only
-— no always-allow — so a headless wake's re-arm attempt is denied when no
-human is present. This is absorbed by design, not fought: the CHAIN is
+**Approval reality (documented 2026-07-29):** the scheduling MCP tools
+(send_later, create_trigger, delete_trigger) prompt on EVERY call — no
+always-allow, and no client-side override exists: per-call approval is forced
+server-side (the `anthropic/requiresUserInteraction` tool annotation; org
+connector controls behave identically), which by documented design defeats
+allow rules and every permission mode including `bypassPermissions`. Tested
+empirically in three provenance-verified rounds — repo settings.json, user
+settings.json, user defaultMode — all still prompt (see the skills repo's
+docs/research/2026-07-29-scheduling-tool-approval-policy.md). So a headless
+wake's re-arm attempt is denied when no human is present. This is absorbed by design, not fought: the CHAIN is
 opportunistic (minutes-cadence whenever a human is around to approve), the
 BABYSITTER is the guaranteed floor (hourly, approval-free — its sessions need
 no scheduling tools to do work, only to re-arm the chain, which they may
