@@ -91,13 +91,21 @@ the analysis:
 
 > **Deciding:** <what this settles, and the charter line it will write>
 > **Why it matters mid-run:** <the concrete failure a good answer prevents>
-> **A — <label>.** Pros: <…> Cons: <…>
-> **B — <label>.** Pros: <…> Cons: <…>
-> **Recommendation: <X>, because <rationale tied to a recon fact or an
+> **<exact option label>.** Pros: <…> Cons: <…>   ← one block per option;
+> name options by their exact visible labels, never letters (dialogs may not
+> render "A/B/C")
+> **Recommendation: <label>, because <rationale tied to a recon fact or an
 > earlier answer — something the human can dispute>.**
 > *Not sure what's being asked? Type a question into "Other" — clarification
 > is free, doesn't count against the budget, and the original question comes
 > back afterward.*
+
+Placement: put each option's Pros/Cons block in that option's `description`
+field — analysis attached to the thing being clicked — and keep the shared
+elements (Deciding / Why it matters / Recommendation / the Other reminder)
+in the question text, which is also the fallback home for everything on any
+surface that truncates descriptions. Both placements are in-dialog and
+lawful; analysis in separate chat prose remains a violation.
 
 The final line is mandatory on every question — never assume the human knows
 the Other field doubles as the clarification channel. Option descriptions

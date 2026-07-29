@@ -56,10 +56,15 @@ structural: instruction-based delivery failed two verified acceptance tests,
 2026-07-29): the template — what's being decided, why it matters mid-run,
 pros AND cons per option, recommendation with rationale, and the "type a
 question into Other for clarification" reminder — travels INSIDE the
-clickable prompt's own question text, where the human reads it at decision
-time. A question call whose text lacks the template is unlawful to make;
-chat prose may add color but never substitutes, and option descriptions stay
-one-line distillations. Each question's template block is also logged
+clickable prompt itself, where the human reads it at decision time: shared
+analysis (deciding / why-it-matters / recommendation / the Other reminder)
+in the question text; each option's Pros/Cons preferably in that option's
+own description field (analysis attached to what gets clicked), with the
+question text as the fallback home when a surface truncates descriptions.
+Reference options by their exact visible labels, never "A/B/C" — dialogs
+may not render letters. A question call missing the template is unlawful to
+make; chat prose may add color but never substitutes. Each question's
+template block is also logged
 verbatim in charter-interview.md (format in references/formats.md), so
 section gates and audits verify compliance mechanically. Read-backs are
 non-simulable: a section or full-charter confirmation question is lawful
