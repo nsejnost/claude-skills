@@ -229,6 +229,10 @@ create it via MCP (#54260).
 
 ## Stop (human present, any device)
 
+0. Re-fetch the coordination branch and re-read state.md FIRST — a parked or
+   long-lived conversation holds a stale world-model. Status already terminal
+   → there is nothing to stop: report the actual state (and hand the human
+   the babysitter-deletion step) instead of editing anything.
 1. Set `status: HALTED-BY-USER`, write a mini halt-report (what was in flight,
    what is safely merged), push.
 2. Delete the arc's pending chain wake(s) (ids in state.md). The UI-created

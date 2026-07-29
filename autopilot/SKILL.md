@@ -273,6 +273,11 @@ resumes it; repeated resume-without-progress trips the no-progress halt
   an orphanable background agent.
 - Honor `stop` immediately: at any point, if state says `HALTED-BY-USER`, finish
   the current write-back and exit.
+- Never act on remembered state after an approval wait, an interruption, or a
+  new human message arriving mid-turn — re-fetch the coordination branch and
+  re-read state.md first; conversation memory is never current (origin is the
+  program). A terminal status found there turns ANY pending action — stop
+  included — into a report, never an edit.
 
 ## References
 
