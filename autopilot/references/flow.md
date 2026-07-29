@@ -225,12 +225,17 @@ state.md being the program counter, S L60).
    (S L218-219), which must unblock on that ticket's closure for DECIDE/BUILD to
    progress. Attempts-exhausted `blocked` tickets have no documented way back to
    `open` short of the human Repair path.
-3. **Gate-failure vs attempt budgets (observed tension, both sourced)**:
-   state.md tracks `INTEGRATE(#09)=1` in `gate_failures:` (F L24) and "two
-   consecutive failures of the same gate → HALT" (S L111-112), while attempts
-   are "3 per ticket, then `blocked`" (S L175). Whether two consecutive
-   INTEGRATE failures on one ticket halt the run before its third attempt is
-   not specified; the diagram shows both bounds without resolving the overlap.
+3. **Gate-failure vs attempt budgets (resolved after authoring)**: this audit
+   originally flagged an overlap — state.md tracks `INTEGRATE(#09)=1` in
+   `gate_failures:` (F L24) and "two consecutive failures of the same gate →
+   HALT" (S L111-112), while attempts are "3 per ticket, then `blocked`"
+   (S L175) — leaving unspecified whether two consecutive INTEGRATE failures
+   on one ticket halt the run before its third attempt. The spine has since
+   pinned it (commit `d0024c4`): the same-gate HALT bounds **phase** gates
+   only; an INTEGRATE failure burns that ticket's attempt, and `INTEGRATE(#NN)`
+   entries are per-ticket visibility, not HALT inputs. The diagram as drawn
+   (`review → open` on attempts, `review → blocked` at 3/3, same-gate HALT on
+   the phase self-loops only) matches the pinned reading.
 
 ## Loop-bound audit
 
