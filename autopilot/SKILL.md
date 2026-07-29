@@ -91,8 +91,12 @@ the repo files disagree, the files win.
    state.md, the last ~30 lines of decisions.md, the ticket index, and the full
    text of whatever tickets this session will act on. Never re-read the whole
    history — that burns context and causes drift.
-2. Terminal status (`DONE`, any `HALTED*`, `PAUSED*`)? Report, verify the
-   Routines are disabled, exit. Exception: none — only human modes restart a run.
+2. Terminal status (`DONE`, any `HALTED*`, `PAUSED*`)? Report and exit. At
+   `DONE`/`HALTED*` also verify both Routines are disabled (a headless wake
+   denied MCP approval logs that it could not). At `PAUSED*` leave the
+   babysitter cron enabled — pause awaits a human re-arm and the babysitter is
+   what keeps the floor armed for it; its hourly see-paused-and-exit reports
+   are the accepted cost. Exception: none — only human modes restart a run.
 3. Claim the run (push the claim; rejected → exit quietly).
 4. Check budgets and the wall clock. Exceeded → the stall path, never silent
    continuation.

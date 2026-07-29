@@ -212,7 +212,10 @@ Offer `launch` on full pass.
    push, and tell the human what to expect on their phone.
 
 Launch is also the re-arm path after a Repair interview or a spec-review pause —
-same steps, minus creating things that already exist.
+same steps, minus creating things that already exist. The babysitter survives
+`PAUSED*` by design: re-use it. If it is gone (stop deleted it, or a HALT
+cleanup), print the babysitter prompt again for a fresh hand-paste — never
+create it via MCP (#54260).
 
 ## Stop (human present, any device)
 
