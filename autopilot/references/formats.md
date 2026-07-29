@@ -9,7 +9,7 @@ reads a schema it doesn't know must HALT, not guess).
 
 ```
 schema: 1
-skill_version: 1.0
+skill_version: 1.1
 arc: table-export
 status: RUNNING            # READY | RUNNING | PAUSED-SPEC-REVIEW | DONE |
                            # HALTED | HALTED-AWAITING-CHARTER | HALTED-BY-USER

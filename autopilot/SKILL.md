@@ -5,7 +5,7 @@ description: Take a well-defined project arc from charter to merged-on-main with
 
 # Autopilot
 
-**Version: 1.0** (stamp this in every state.md it creates)
+**Version: 1.1** (stamp this in every state.md it creates)
 
 Take one **arc** — a well-defined chunk of project work — from a human-authored
 charter to merged-on-main with nobody watching. The human's judgment is
@@ -44,6 +44,21 @@ otherwise → `status`. Explicit mode words in the invocation always win.
 who can answer. In a headless context (a Routine-fired session, or any context
 where nobody can click), those modes print one line saying they are
 human-attended and exit — never scaffold, guess, or self-answer.
+Attendance is **measured, never inferred**: whenever the dispatch would change
+on it (bare `/autopilot` with a HALTED state; a human mode invoked in an
+ambiguous context), ask ONE clickable question — any answer proves a human is
+present; a timeout proves headless and takes the headless path. A missed or
+denied tool approval is not evidence of absence (verified 2026-07-29: a
+present human was misclassified headless off exactly that signal).
+
+**Interview output contract** (charter and Repair, enforced — the guide's
+protocol is not compressible): every question message carries the prose
+template (context, per-option pros/cons, recommendation with rationale, the
+Other-as-clarification reminder) — clickable option descriptions are
+distillations of that prose, never a substitute. Read-backs are non-simulable:
+a section or full-charter confirmation question is lawful ONLY in a turn whose
+visible text already contains the exact text being confirmed. "As read back
+above" with nothing above is a protocol violation, not a shortcut.
 
 ## Where state lives: the coordination branch
 
@@ -91,12 +106,15 @@ the repo files disagree, the files win.
    state.md, the last ~30 lines of decisions.md, the ticket index, and the full
    text of whatever tickets this session will act on. Never re-read the whole
    history — that burns context and causes drift.
-2. Terminal status (`DONE`, any `HALTED*`, `PAUSED*`)? Report and exit. At
-   `DONE`/`HALTED*` also verify both Routines are disabled (a headless wake
-   denied MCP approval logs that it could not). At `PAUSED*` leave the
-   babysitter cron enabled — pause awaits a human re-arm and the babysitter is
-   what keeps the floor armed for it; its hourly see-paused-and-exit reports
-   are the accepted cost. Exception: none — only human modes restart a run.
+2. Terminal status (`DONE`, any `HALTED*`, `PAUSED*`)? Report and exit. The
+   babysitter cron follows one rule: it SURVIVES every state that awaits a
+   human re-arm (`PAUSED*`, `HALTED`, `HALTED-AWAITING-CHARTER`) — it is what
+   keeps the floor armed for the resume, and its hourly see-and-exit reports
+   are the accepted cost — and comes down only when the arc is over (`DONE`,
+   or stop's `HALTED-BY-USER`, where the human deletes it in the Routines
+   dashboard). Chain one-shots are verified spent at any terminal state (a
+   headless wake denied MCP approval logs that it could not verify).
+   Exception: none — only human modes restart a run.
 3. Claim the run (push the claim; rejected → exit quietly).
 4. Check budgets and the wall clock. Exceeded → the stall path, never silent
    continuation.

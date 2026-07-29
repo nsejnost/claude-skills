@@ -185,6 +185,17 @@ After each section: read the drafted section back verbatim; the human confirms
 or edits before the next begins. After the last: full-charter read-back and
 explicit confirmation before anything is written.
 
+**Teeth (2026-07-29, after a live interview skipped this gate twice):** a
+confirmation question is lawful only in a turn whose visible text already
+contains the exact text being confirmed. Never ask against "above" when above
+is empty, and never absorb a read-back demand into the question's label —
+print the document, then ask. Permitted stronger form for the full charter:
+write the draft to the coordination branch FIRST with the template's sentinel
+line still present (an abandoned draft can then never pass VALIDATE), print
+the pushed file verbatim, and on confirmation remove the sentinel and set
+`status: READY` — confirming against the real artifact beats confirming
+against a promise.
+
 ## Output (after the confirmed full read-back)
 
 1. Create/checkout the coordination branch `auto/<arc-slug>` from main.

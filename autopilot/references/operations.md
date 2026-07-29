@@ -16,7 +16,10 @@ Every run session:
 ```
 git fetch origin auto/<arc>            # plus origin/main
 git checkout auto/<arc>
-# 1) CLAIM: edit state.md → claim + sessions_used, commit "claim: session <id>", push
+# 1) CLAIM: edit state.md → set claim AND increment sessions_used IN THIS
+#    SAME COMMIT (crashed sessions must still count — a write-back-time
+#    increment undercounts every session that dies mid-unit), commit
+#    "claim: session <id>", push
 #    push rejected → someone else is live → exit quietly (do not retry the claim)
 #    claim present and younger than max_session_minutes → exit quietly
 #    claim present but stale → adopt: note the takeover in session-log, re-claim
@@ -69,7 +72,10 @@ KNOWN UPSTREAM DEFECT: fresh-session provisioning silently fails on some
 accounts — the trigger is marked `run_once_fired` while the cloud container
 never initializes (anthropics/claude-code#54260, **closed as not planned**;
 13/13 reproduction on this skill's home account — see
-docs/research/2026-07-28-routine-fresh-session-materialization.md). The
+docs/research/2026-07-28-routine-fresh-session-materialization.md). Compounding
+it on this account (canary, 2026-07-29): the org REJECTS the `connectors`
+param on MCP-created triggers — even a provisioning fix would leave MCP-fired
+sessions here without GitHub tools. The
 failure is specific to **MCP-created** triggers: an identical routine created
 by hand in the claude.ai Routines dashboard provisions and executes
 (verified; create_trigger cannot attach a repository, which likely leaves
@@ -89,7 +95,9 @@ canary prompt then ALSO attempts a push to the `auto/<arc>` prefix and
 records which prefixes are writable — that second result decides whether
 lane B uses the standard branch layout or the arc's branches must live under
 `claude/`. No marker → lane A. Delete the canary Routine and scratch branch
-either way.
+either way. Fast path: when the account's lane verdict is already known (a
+recent canary, or the human asserts it), the human may skip the wait —
+record "lane asserted by human <date>" in state notes.
 
 **Notifications.** Completion push notifications only exist for
 fresh-session Routines — the server rejects the parameter for self-bind. On
@@ -183,7 +191,9 @@ blocks launch with a specific fix.
    (use a throwaway branch + immediately-closed draft PR as the probe, or verify
    permissions read-only if the human prefers); squash merging allowed; branch
    protection on main has **no required human reviews** (required status checks
-   are fine — merges then use auto-merge-on-green).
+   are fine — merges then use auto-merge-on-green). Probe branches cannot be
+   deleted by sessions (the proxy blocks it) — name them in the report for the
+   human's eventual cleanup.
 4. CI: workflows detected (or the charter's no-CI stance confirmed); baseline
    suite runs green **in this container** — catching env vars/secrets that exist
    only on the human's machine, the classic overnight killer.
@@ -197,7 +207,10 @@ Offer `launch` on full pass.
 ## Launch (human present)
 
 1. Confirm with the human (one click): arc name, target repo/branch, budgets,
-   merge policy line ("per-ticket squash-merged PRs, auto-merged on green").
+   merge policy line ("per-ticket squash-merged PRs, auto-merged on green") —
+   restated VERBATIM in the confirmation message itself. "Launch as summarized
+   above?" with no summary in the same message is a protocol violation
+   (observed twice live). Re-arms restate the same set.
 2. Create the dashboard issue; store its number in state.md.
 3. Re-run the canary if preflight's result is stale, then arm the chosen
    lane. Lane A: create the first `send_later` wake — this conversation

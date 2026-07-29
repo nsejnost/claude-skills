@@ -155,11 +155,13 @@ of these.
    design defeats allow rules and every permission mode. Babysitter floor is
    the permanent web architecture; remaining paths are an Agent SDK harness
    (needs an API key) or an upstream change — see
-   `2026-07-29-scheduling-tool-approval-policy.md`; (b) first-exercise the
-   Repair path deliberately (e.g. induce a benign HALT in a sandbox arc);
+   `2026-07-29-scheduling-tool-approval-policy.md`; (b) ~~first-exercise the
+   Repair path~~ — CLOSED 07-29 by the smoke-gate drill: full
+   HALT → Repair → resume → DONE loop proven in production, 8 further
+   findings patched (see `2026-07-29-smoke-gate-repair-drill.md`);
    (c) skill-atlas.html refresh; (d) upstream follow-up on #54260 with the
    14/14 repro data, now bundled with the `requiresUserInteraction`
-   feature-ask from (a).
+   feature-ask from (a) and the connectors-param rejection.
 
 ## Evidence gaps
 
