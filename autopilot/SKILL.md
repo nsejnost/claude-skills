@@ -109,7 +109,10 @@ the repo files disagree, the files win.
 State advances only through gates (checklists in `references/formats.md`), each
 audited by a fresh-context subagent (the **Auditor**). A failed gate loops the
 phase back with the reason recorded; **two consecutive failures of the same gate
-→ HALT**.
+→ HALT**. That rule bounds the **phase** gates. The per-ticket INTEGRATE check
+is not a phase gate: an INTEGRATE failure fails that ticket's attempt (BUILD
+step 6 — 3, then `blocked`) and never trips this HALT; `INTEGRATE(#NN)` entries
+in state.md's `gate_failures:` are per-ticket visibility, not HALT inputs.
 
 **VALIDATE** — Charter present, sentinel line removed, every Done-when line is a
 runnable `command → expected`, priorities strictly ranked, budgets numeric,

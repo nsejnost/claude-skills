@@ -35,7 +35,9 @@ rejected claim push means another session is live — exit. `sessions_used`
 increments in the same commit as the claim (so crashed sessions still count).
 Status transitions into READY/RUNNING happen only in human modes (charter,
 launch); run mode only ever moves RUNNING → {RUNNING, PAUSED-SPEC-REVIEW, DONE,
-HALTED*}.
+HALTED*}. `gate_failures:` feeds the consecutive-same-gate HALT for **phase**
+gates only; `INTEGRATE(#NN)` entries are per-ticket visibility — INTEGRATE
+failures burn that ticket's `attempts`, never this HALT.
 
 ## Ticket file — docs/auto/tickets/NN-slug.md
 
@@ -119,7 +121,8 @@ Supersedes: — | D-00NN (new evidence: <ref>)
 - [ ] Blocking edges form a DAG; no ticket exceeds one session by the sizing heuristics
 - [ ] Mergeability-skeptic pass ran on the independence claims
 
-**INTEGRATE (mechanical, per ticket — any FAIL fails the attempt)**
+**INTEGRATE (mechanical, per ticket — any FAIL fails the attempt; bounded by
+the ticket's attempts, not the consecutive-same-gate HALT)**
 - [ ] Branch rebased onto current origin/main; gate ran on the rebased result
 - [ ] All charter CI commands green locally
 - [ ] Ratchets hold (see Ratchet rules below)
