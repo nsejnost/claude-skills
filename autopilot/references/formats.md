@@ -25,7 +25,7 @@ gate_failures: SPEC=0 TICKETS=1 INTEGRATE(#09)=1
 merged: 9                  # tickets merged so far
 triggers: chain=trig_abc123 cron=trig_def456
 dashboard: #7              # the dashboard issue number
-launched: 2026-07-28T02:10Z
+launched: 2026-07-28T02:10Z  # re-stamped at every launch/re-arm; max_hours measures from here
 last_session: 2026-07-28T06:41Z | BUILD | wave 4 | #12 merged (PR #41), #14 attempt 2 failed | next: #14 solo
 notes: <one line max — anything the next session must know that isn't elsewhere>
 ```

@@ -111,9 +111,9 @@ re-arm is logged, never treated as an error.
 **Guards** (all live in the run session/wake, not the Routine):
 - Schedule only when the just-pushed state says `RUNNING`; one next wake,
   never more.
-- `sessions_used` at cap, `max_hours` exceeded, or `no_progress_sessions`
-  consecutive wakes without a state change (compare `last_session`) → HALT
-  instead of scheduling.
+- `sessions_used` at cap, `max_hours` exceeded (wall clock since the current
+  `launched:` stamp), or `no_progress_sessions` consecutive wakes without a
+  state change (compare `last_session`) → HALT instead of scheduling.
 - Scheduling tools unavailable (MCP hiccup): skip the link, rely on the
   babysitter, note it in session-log. Unavailable at a terminal state: the
   halt/completion report tells the human to delete the Routines from the
@@ -209,7 +209,11 @@ Offer `launch` on full pass.
    with push notifications on, same prompt. Store all trigger ids in
    state.md either way.
 4. Set `status: RUNNING` (from READY / a repaired HALT / PAUSED-SPEC-REVIEW),
-   push, and tell the human what to expect on their phone.
+   **re-stamp `launched:` to now**, push, and tell the human what to expect on
+   their phone. `max_hours` bounds each unattended RUNNING stint — never the
+   calendar time a human spent reviewing at a pause or repairing a HALT; a
+   re-arm that keeps a stale `launched:` would let the review pause eat the
+   whole wall-clock budget and halt the run on its first wake.
 
 Launch is also the re-arm path after a Repair interview or a spec-review pause —
 same steps, minus creating things that already exist. The babysitter survives
