@@ -106,9 +106,19 @@ caught the freeze pre-CI, so CI never went red needing it); ci-pending timeout;
 **Lane B** (upstream-blocked by #54260 — cannot be exercised on this account).
 
 ### Findings — all patched, none open
-- **Interview compression family** (≥4 instances across two interviews): fixed in
-  three escalating attempts, ending structural — the per-question analysis now
-  rides *inside* the AskUserQuestion call, and read-back gates are non-simulable.
+- **Interview compression family** (≥4 instances across two interviews): the core
+  defect — bare prompts without analysis — was fixed in three escalating attempts,
+  ending structural (`e8cc074`): the per-question analysis now rides *inside* the
+  AskUserQuestion call, verified live in the xlsx-export interview (compliant from
+  question one on). Two residuals, logged honestly: (a) a follow-on *layout*
+  refinement (`4380e3f` — per-option pros/cons in the option descriptions,
+  visible-label references) landed mid-interview and has **not yet faced a live
+  interview** — its first exercise is the next charter run (low risk: the analysis
+  is present regardless, with the question-text fallback preserved); (b) this class
+  is **instruction-enforced, not test-enforced** — charter mode refuses headless
+  invocation, so unlike every run-mode contract it has no deterministic harness
+  gate. That interactivity is precisely why it regressed twice; the structural
+  placement is the strongest available lever, not a guarantee.
 - **Repair drill**: 8 fixes (attendance measured-not-inferred; babysitter
   survives awaiting-human states; `launched:` re-stamp; INTEGRATE-vs-same-gate
   semantics; the staleness rail; and more — see that report).
