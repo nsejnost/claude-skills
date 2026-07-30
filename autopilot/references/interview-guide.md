@@ -85,9 +85,10 @@ One question per message. Multi-part questions get shallow answers.
 
 **Per-question compliance template (required — structural since 2026-07-29,
 after chat-prose delivery failed two verified acceptance tests).** Every
-choice question MUST embed this shape inside the clickable prompt's own
-question text — the dialog is where the human decides, so the dialog carries
-the analysis:
+choice question MUST carry this shape inside the clickable prompt, SPLIT
+across two fields — the shared framing in the question text, the per-option
+Pros/Cons in the option descriptions — never crammed into the question text
+alone:
 
 > **Deciding:** <what this settles, and the charter line it will write>
 > **Why it matters mid-run:** <the concrete failure a good answer prevents>
@@ -100,23 +101,25 @@ the analysis:
 > is free, doesn't count against the budget, and the original question comes
 > back afterward.*
 
-Placement: put each option's Pros/Cons block in that option's `description`
-field — analysis attached to the thing being clicked — and keep the shared
-elements (Deciding / Why it matters / Recommendation / the Other reminder)
-in the question text, which is also the fallback home for everything on any
-surface that truncates descriptions. Both placements are in-dialog and
-lawful; analysis in separate chat prose remains a violation.
+Placement is load-bearing (observed 2026-07-30): the AskUserQuestion question
+field renders as ONE block with line breaks collapsed, so per-option Pros/Cons
+copied into it stack into an unreadable wall. So each option's Pros/Cons live
+in that option's `description` field ONLY (verified to render in full on
+Claude Code web) — do NOT duplicate them into the question text. The question
+text stays to the shared elements above, terse; the per-option detail lives in
+the separately-rendered option boxes. Analysis in separate chat prose (outside
+the dialog) remains a violation.
 
-The final line is mandatory on every question — never assume the human knows
-the Other field doubles as the clarification channel. Option descriptions
-stay one-line distillations OF the question text's analysis. Each question's
-template block is also logged verbatim in the interview transcript (formats),
-where the section read-back gates verify it mechanically — a QN entry without
-its block fails the gate. Self-check: if your question texts are getting
-shorter than this template, you are compressing — stop and re-read this
-protocol. The context layer IS the interview; a bare prompt with terse
-options recreates exactly the shallow-answer failure the one-question rule
-exists to prevent.
+The Other-reminder line is mandatory on every question — never assume the
+human knows the Other field doubles as the clarification channel. Each
+question's full template (framing + per-option Pros/Cons) is logged verbatim
+in the interview transcript (formats), where the section read-back gates
+verify it mechanically — a QN entry without its block fails the gate.
+Self-check: the failure to prevent is a bare prompt with NO analysis anywhere
+in the dialog; the fix is analysis IN the dialog — terse framing in the
+question text, full Pros/Cons in the option boxes — NOT a long question text.
+A bare prompt with unexplained options recreates the shallow-answer failure
+the one-question rule exists to prevent.
 
 Two question shapes: most sections are choice-shaped and use the full loop.
 Generative questions (Destination, the braindump, first-pass Done-when) open as

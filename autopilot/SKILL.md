@@ -56,11 +56,14 @@ structural: instruction-based delivery failed two verified acceptance tests,
 2026-07-29): the template — what's being decided, why it matters mid-run,
 pros AND cons per option, recommendation with rationale, and the "type a
 question into Other for clarification" reminder — travels INSIDE the
-clickable prompt itself, where the human reads it at decision time: shared
-analysis (deciding / why-it-matters / recommendation / the Other reminder)
-in the question text; each option's Pros/Cons preferably in that option's
-own description field (analysis attached to what gets clicked), with the
-question text as the fallback home when a surface truncates descriptions.
+clickable prompt itself, where the human reads it at decision time, SPLIT
+across two fields: the shared framing (deciding / why-it-matters /
+recommendation / the Other reminder) in the question text, kept terse; each
+option's Pros/Cons in that option's own description field ONLY — NOT also
+copied into the question text. The question field renders as one block with
+line breaks collapsed (observed 2026-07-30), so per-option analysis duplicated
+into it stacks into an unreadable wall; the option boxes render separately and
+carry that detail.
 Reference options by their exact visible labels, never "A/B/C" — dialogs
 may not render letters. A question call missing the template is unlawful to
 make; chat prose may add color but never substitutes. Each question's

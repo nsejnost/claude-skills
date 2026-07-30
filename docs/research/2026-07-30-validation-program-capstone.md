@@ -112,10 +112,13 @@ caught the freeze pre-CI, so CI never went red needing it); ci-pending timeout;
   AskUserQuestion call, verified live in the xlsx-export interview (compliant from
   question one on). One residual remains: (a) the follow-on *layout* refinement
   (`4380e3f` — per-option pros/cons in the option descriptions, visible-label
-  references) was **verified live 2026-07-30** in a throwaway charter interview —
-  a downstream decision question rendered per-option trade-offs inside the option
-  boxes, visible labels (no phantom A/B/C), and the shared framing + Other-reminder
-  in the question text, all correct; (b) this class
+  references) was **verified live 2026-07-30** — option boxes render per-option
+  trade-offs with visible labels (no phantom A/B/C). Same verification exposed a
+  follow-on defect: the question text *duplicated* the per-option Pros/Cons and,
+  because that field collapses line breaks, stacked into an unreadable wall.
+  Fixed (`d224cc9`+): per-option detail now lives in the option boxes ONLY, the
+  question text kept terse — **pending live re-verification** (next new-container
+  interview); (b) this class
   is **instruction-enforced, not test-enforced** — charter mode refuses headless
   invocation, so unlike every run-mode contract it has no deterministic harness
   gate. That interactivity is precisely why it regressed twice; the structural
