@@ -110,11 +110,12 @@ caught the freeze pre-CI, so CI never went red needing it); ci-pending timeout;
   defect — bare prompts without analysis — was fixed in three escalating attempts,
   ending structural (`e8cc074`): the per-question analysis now rides *inside* the
   AskUserQuestion call, verified live in the xlsx-export interview (compliant from
-  question one on). Two residuals, logged honestly: (a) a follow-on *layout*
-  refinement (`4380e3f` — per-option pros/cons in the option descriptions,
-  visible-label references) landed mid-interview and has **not yet faced a live
-  interview** — its first exercise is the next charter run (low risk: the analysis
-  is present regardless, with the question-text fallback preserved); (b) this class
+  question one on). One residual remains: (a) the follow-on *layout* refinement
+  (`4380e3f` — per-option pros/cons in the option descriptions, visible-label
+  references) was **verified live 2026-07-30** in a throwaway charter interview —
+  a downstream decision question rendered per-option trade-offs inside the option
+  boxes, visible labels (no phantom A/B/C), and the shared framing + Other-reminder
+  in the question text, all correct; (b) this class
   is **instruction-enforced, not test-enforced** — charter mode refuses headless
   invocation, so unlike every run-mode contract it has no deterministic harness
   gate. That interactivity is precisely why it regressed twice; the structural
