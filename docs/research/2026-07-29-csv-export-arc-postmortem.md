@@ -26,7 +26,7 @@ spec pause (its headless disable was refused) and carried BUILD to DONE.
 | Metric | Result | Budget / expectation |
 | --- | --- | --- |
 | Tickets closed | 8/8, all first-attempt | attempts allowed: 3 each |
-| Build waves | 2 (#06 solo → #07 ∥ #08) | max_parallel 3 |
+| Build waves | 2 (e.g. #06 solo → #07 ∥ #08 — representative, not the full build list) | max_parallel 3 |
 | Halts / gate failures / replans | 0 / 0 / 0 | — |
 | Sessions used | 11/40 | 3.6× headroom |
 | Wall clock | 01:12Z → 07:00Z on 07-29 (~5.8 h incl. ~1 h review pause) | max_hours 24; elapsed 5.8 |
@@ -110,7 +110,8 @@ dead chain, denied-approval absorption.
 
 **Not yet exercised** (known-untested, not defects): HALT → Repair interview
 (only in harness s-tests), replan path, TOO_BIG split, architecture checkpoint
-(needs ≥5 merged build tickets; this arc merged 4), rebase-conflict retry-solo,
+(needs ≥5 merged build tickets; this arc merged 4 of its 8 closed tickets as
+builds — the rest were research/decision/prototype/task), rebase-conflict retry-solo,
 CI-red diagnose/fix loop (CI never went red), ci-pending timeout path, Lane B
 (upstream-blocked). The next arc should expect first-exercise wrinkles on any
 of these.
