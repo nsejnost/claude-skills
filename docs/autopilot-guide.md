@@ -171,8 +171,9 @@ Plain-language definitions of the skill's real vocabulary. Each line ends with
   state and exits. It is the **guaranteed floor** that keeps an unattended run
   moving. (`operations.md`.) *Why it matters: the fast "chain" of sessions needs a
   human to approve each scheduling call, so the babysitter is what actually
-  carries a run through the night. It watches the whole **run**, not individual
-  workers.*
+  carries a run through the night. It watches the whole **run** and wakes the
+  sessions that do the building — it isn't a separate supervisor standing over an
+  individual worker.*
 - **"Fresh session" / materialization** — a **fresh session** is a brand-new,
   empty Claude Code web container (a fresh clone of the repo).
   **Materialization** is the platform actually spinning that container up and
@@ -550,12 +551,16 @@ So **what does the babysitter watch, and what power does it hold?** It watches t
 **run as a whole**: is it still progressing? It has power over the **run** — it
 can start a fresh session, adopt a stale claim and resume a dead chain, and if it
 resumes repeatedly *without* the state changing (`no_progress_sessions`, default
-3), that trips a HALT so a stuck run can't spin forever. What it does **not** do
-is reach inside a running worker — it doesn't supervise the coding. The roles with
-power over an individual worker are the **orchestrator** (which dispatches
-workers, splits a `TOO_BIG` one, bounds it to 3 attempts, and blocks it) and the
-**reviewer** (which can block a ticket from merging). The babysitter is the
-watchdog over the *process*, not the *programmer*.
+3), that trips a HALT so a stuck run can't spin forever. But its power over
+workers is **indirect and real**, not absent: a babysitter fire runs
+`/autopilot run`, which *is* a full run session (an orchestrator), so a
+babysitter-fired session that lands in BUILD dispatches workers, runs the review,
+and squash-merges code — exactly like a chain-fired one. The babysitter is the
+**alarm clock that wakes the sessions that do the programming**, not a separate
+supervisor beside them. **Direct** power over an individual worker belongs to the
+**orchestrator** (dispatch, `TOO_BIG` split, bound to 3 attempts, block) and the
+**reviewer** (block a merge); what nobody does — babysitter or orchestrator — is
+micromanage a worker mid-run.
 
 ### The Decision Protocol (grilling with nobody home)
 
@@ -738,7 +743,9 @@ postmortems.
    spurious failures — and fixes it before BUILD.
 6. **BUILD** *(headless):* **wave 1** builds #06 solo; **wave 2** builds #07 ∥ #08
    in parallel (disjoint touches). Each ticket: worker → reviewer → fixer →
-   serial integrate → squash-merged PR. **8 tickets, all first-attempt.** The
+   serial integrate → squash-merged PR. The build tickets merge **first-attempt**
+   across these 2 waves; counting the earlier research / decision / prototype /
+   task tickets, **8 tickets total** are closed over the run. The
    babysitter carries the overnight tail at ~1 unit/hour.
 7. **FINISH → DONE** *(07:00Z):* all 5 `Done-when` lines re-verified against
    `main`; archive PR #7 merged; dashboard closed ✅.
@@ -917,12 +924,14 @@ postmortems. The honest caveats:
    stall path." I've grouped them under "repair lane" for readability and said so.
 
 3. **The babysitter's "power over a worker."** The Phase-1 brief asked what power
-   the babysitter has *over a worker*. Per the files, the babysitter's power is
-   over the **run/chain** (start, resume, adopt a stale claim, trip the
-   no-progress HALT), **not** over individual worker subagents. The roles with
-   direct power over a worker are the **orchestrator** and the **reviewer**. I
-   wrote it that way for accuracy; flagging it here in case the intended framing
-   was different.
+   the babysitter has *over a worker*. The precise answer (see §6): the babysitter
+   is a scheduled trigger that runs `/autopilot run`, so each fire *wakes a full
+   run session (an orchestrator)* — which in BUILD dispatches workers, reviews,
+   and merges. Its power over workers is therefore **indirect but real** (through
+   the sessions it spawns), not a separate live supervision; **direct** power over
+   a worker belongs to the orchestrator and the reviewer. An earlier draft framed
+   the babysitter as "watchdog, not programmer," which overstated the separation —
+   corrected here and in §6.
 
 4. **A couple of transitions are inferred in `flow.md` itself, not stated
    verbatim in `SKILL.md`.** `flow.md` labels these with footnotes, and I carried
