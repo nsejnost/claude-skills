@@ -56,18 +56,26 @@ unlabelled suggestions anchor. Never silently write a fact into the charter.
 
 One question per message. Multi-part questions get shallow answers.
 
-1. **Context inside the clickable prompt's question text** (chat prose may
-   duplicate it, never replace it — two live interviews proved separate prose
-   gets dropped): what's being decided, why it matters for the run, then the
-   **pros, cons, and implications of every option — equal analytical effort
-   each**; the recommended option's cons are never softened. Then the **recommendation and its rationale**, tied to
-   something checkable (a recon fact, an earlier answer, the ranked priorities)
-   so the human can dispute the premise, not just the pick.
+1. **Context inside the clickable prompt** (never separate chat prose — two
+   live interviews proved separate prose gets dropped, and one crammed it into
+   the question text as an unreadable wall). Keep ALL the content; lay it out
+   like a clean reference dialog — a short question text over rich,
+   individually-boxed options — so nothing is lost AND nothing walls up. The
+   question text carries what's being decided (a sentence), why it matters
+   mid-run (a sentence — always), and a one-line pointer to Other for
+   clarification. **Each option's own description carries its pros, cons, and
+   implications — equal analytical effort each**, the recommended option's cons
+   never softened, and the **recommendation's rationale living in the
+   recommended option's Pros**, tied to something checkable (a recon fact, an
+   earlier answer, the ranked priorities) so the human can dispute the premise,
+   not just the pick.
 2. **The clickable prompt** (AskUserQuestion): recommended option first,
-   suffixed "(Recommended)"; each option's description is a one-line distillation
-   of its trade-off; multi-select where naturally multi-pick (e.g. no-touch
-   candidates); more than 4 candidates → chunk into sequential prompts. The
-   built-in "Other" field is the free-text path.
+   suffixed "(Recommended)"; each option's description is its full trade-off —
+   a one-line explanation then "PROS: … CONS: …" (this is where the per-option
+   analysis lives, not the question text); multi-select where naturally
+   multi-pick (e.g. no-touch candidates); more than 4 candidates → chunk into
+   sequential prompts. The built-in "Other" field is the free-text path — the
+   question text's closing line points the human to it for clarification.
 3. **Branch on the response**:
    - a click, or a typed **answer** → read the resulting charter line(s) back,
      log with provenance, next question.
@@ -83,43 +91,39 @@ One question per message. Multi-part questions get shallow answers.
    understanding; then return to the (possibly revised) original question.
    Log with [CLARIFICATION] / [OPTION-REVISED] tags (format in formats.md).
 
-**Per-question compliance template (required — structural since 2026-07-29,
-after chat-prose delivery failed two verified acceptance tests).** Every
-choice question MUST carry this shape inside the clickable prompt, SPLIT
-across two fields — the shared framing in the question text, the per-option
-Pros/Cons in the option descriptions — never crammed into the question text
-alone:
+**Per-question compliance template (required — structural since 2026-07-29;
+layout matched to a clean reference dialog 2026-07-30).** Keep ALL the content
+the interview needs — what's being decided, why it matters, honest per-option
+pros/cons, a reasoned recommendation, and the clarification path — but lay it
+out so it reads as a SHORT question over rich, individually-boxed options, not
+a wall. (The question field renders as one collapsed block with line breaks
+lost, so the BULK — the per-option analysis — goes in the option boxes, which
+render separately; the question text stays to a few sentences of framing.)
 
-> **Deciding:** <what this settles, and the charter line it will write>
-> **Why it matters mid-run:** <the concrete failure a good answer prevents>
-> **<exact option label>.** Pros: <…> Cons: <…>   ← one block per option;
-> name options by their exact visible labels, never letters (dialogs may not
-> render "A/B/C")
-> **Recommendation: <label>, because <rationale tied to a recon fact or an
-> earlier answer — something the human can dispute>.**
-> *Not sure what's being asked? Type a question into "Other" — clarification
-> is free, doesn't count against the budget, and the original question comes
-> back afterward.*
+> **Question text** — 2–3 short sentences, no labeled blocks:
+> what's being decided (the concrete question); then why it matters mid-run
+> (one sentence — always); then one closing line — *"Not sure? Type a question
+> into Other — the original question comes back after."*
+>
+> **Each option** = label + `description`:
+> label = the choice, **(Recommended)** suffixed on the best one (named by its
+> visible label, never "A/B/C");
+> description = a one-line explanation, then **PROS:** <…> **CONS:** <…> — the
+> recommended option's Pros carry the reason it wins (tied to a recon fact, an
+> earlier answer, or the ranked priorities, so the human can dispute it).
 
-Placement is load-bearing (observed 2026-07-30): the AskUserQuestion question
-field renders as ONE block with line breaks collapsed, so per-option Pros/Cons
-copied into it stack into an unreadable wall. So each option's Pros/Cons live
-in that option's `description` field ONLY (verified to render in full on
-Claude Code web) — do NOT duplicate them into the question text. The question
-text stays to the shared elements above, terse; the per-option detail lives in
-the separately-rendered option boxes. Analysis in separate chat prose (outside
-the dialog) remains a violation.
-
-The Other-reminder line is mandatory on every question — never assume the
-human knows the Other field doubles as the clarification channel. Each
-question's full template (framing + per-option Pros/Cons) is logged verbatim
-in the interview transcript (formats), where the section read-back gates
-verify it mechanically — a QN entry without its block fails the gate.
-Self-check: the failure to prevent is a bare prompt with NO analysis anywhere
-in the dialog; the fix is analysis IN the dialog — terse framing in the
-question text, full Pros/Cons in the option boxes — NOT a long question text.
-A bare prompt with unexplained options recreates the shallow-answer failure
-the one-question rule exists to prevent.
+Every choice question MUST give each option honest Pros AND Cons in its own
+description — the recommended option's cons never softened — and the question
+text MUST carry the decision, the stakes, and the Other pointer. Nothing is
+dropped; the per-option analysis simply lives in the boxes, NOT copied into
+the question text (that copy is what created the wall, observed 2026-07-30).
+Analysis in separate chat prose outside the dialog is a violation. Each
+question's full content (question + every option's Pros/Cons) is logged
+verbatim in the interview transcript (formats), where the section read-back
+gates verify it — a QN entry whose options lack Pros/Cons fails the gate.
+Self-check: every element still present (decision, stakes, per-option
+pros/cons, reasoned recommendation, Other pointer) AND the question text short
+enough to read — the fix is placement, never deletion.
 
 Two question shapes: most sections are choice-shaped and use the full loop.
 Generative questions (Destination, the braindump, first-pass Done-when) open as

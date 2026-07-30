@@ -116,9 +116,11 @@ caught the freeze pre-CI, so CI never went red needing it); ci-pending timeout;
   trade-offs with visible labels (no phantom A/B/C). Same verification exposed a
   follow-on defect: the question text *duplicated* the per-option Pros/Cons and,
   because that field collapses line breaks, stacked into an unreadable wall.
-  Fixed (`d224cc9`+): per-option detail now lives in the option boxes ONLY, the
-  question text kept terse — **pending live re-verification** (next new-container
-  interview); (b) this class
+  Fixed and refined to a clean reference layout — all content preserved (decision,
+  stakes, per-option pros/cons, reasoned recommendation, Other pointer) but laid
+  out as a short question over rich individually-boxed options, the per-option
+  detail in the boxes not the question text (placement, never deletion) —
+  **pending live re-verification** (next new-container interview); (b) this class
   is **instruction-enforced, not test-enforced** — charter mode refuses headless
   invocation, so unlike every run-mode contract it has no deterministic harness
   gate. That interactivity is precisely why it regressed twice; the structural

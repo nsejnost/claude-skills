@@ -54,16 +54,18 @@ present human was misclassified headless off exactly that signal).
 **Interview output contract** (charter and Repair — attempt three, now
 structural: instruction-based delivery failed two verified acceptance tests,
 2026-07-29): the template — what's being decided, why it matters mid-run,
-pros AND cons per option, recommendation with rationale, and the "type a
-question into Other for clarification" reminder — travels INSIDE the
-clickable prompt itself, where the human reads it at decision time, SPLIT
-across two fields: the shared framing (deciding / why-it-matters /
-recommendation / the Other reminder) in the question text, kept terse; each
-option's Pros/Cons in that option's own description field ONLY — NOT also
-copied into the question text. The question field renders as one block with
-line breaks collapsed (observed 2026-07-30), so per-option analysis duplicated
-into it stacks into an unreadable wall; the option boxes render separately and
-carry that detail.
+honest pros AND cons per option, a reasoned recommendation, and the "type a
+question into Other" clarification path — ALL travels INSIDE the clickable
+prompt, laid out for readability with NOTHING dropped: the question text
+carries the decision (the question), the mid-run stakes (one sentence), and
+the Other pointer (one line) — a few short sentences; each option's Pros/Cons
+live in that option's own description field (a one-line explanation then
+"PROS: … CONS: …"), the recommended option suffixed "(Recommended)" with its
+rationale in its Pros. The question field renders as one collapsed block (line
+breaks lost), so the BULK — the per-option analysis — goes in the
+separately-rendered option boxes, NEVER copied into the question text (that
+copy is what walled it up, observed 2026-07-30). Modeled on a clean reference
+dialog.
 Reference options by their exact visible labels, never "A/B/C" — dialogs
 may not render letters. A question call missing the template is unlawful to
 make; chat prose may add color but never substitutes. Each question's
